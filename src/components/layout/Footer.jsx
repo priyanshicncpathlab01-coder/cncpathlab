@@ -3,13 +3,29 @@ import { Beaker, Mail, Phone, MapPin } from 'lucide-react';
 import { FaFacebook, FaXTwitter, FaLinkedin } from 'react-icons/fa6';
 
 const Footer = () => {
+  const handleNavigate = (e, page, href) => {
+    e.preventDefault();
+    if (page) {
+      window.dispatchEvent(new CustomEvent('navigate', { detail: { page } }));
+    } else if (href) {
+      window.dispatchEvent(new CustomEvent('navigate', { detail: { page: 'home' } }));
+      setTimeout(() => {
+        const element = document.querySelector(href);
+        if (element) element.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
+    }
+  };
+
   return (
     <footer className="bg-slate-900 text-slate-300 pt-16 pb-8">
       <div className="container-custom">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
           {/* Company Info */}
           <div>
-            <div className="flex items-center gap-2 mb-6">
+            <div 
+              className="flex items-center gap-2 mb-6 cursor-pointer"
+              onClick={(e) => handleNavigate(e, 'home')}
+            >
               <div className="bg-primary-600 p-2 rounded-lg">
                 <Beaker className="w-5 h-5 text-white" />
               </div>
@@ -32,11 +48,11 @@ const Footer = () => {
           <div>
             <h4 className="text-white font-bold mb-6">Quick Links</h4>
             <ul className="space-y-4">
-              <li><a href="#" className="hover:text-primary-400 transition-colors">Home</a></li>
-              <li><a href="#services" className="hover:text-primary-400 transition-colors">Services</a></li>
-              <li><a href="#solutions" className="hover:text-primary-400 transition-colors">Solutions</a></li>
-              <li><a href="#research" className="hover:text-primary-400 transition-colors">Research</a></li>
-              <li><a href="#about" className="hover:text-primary-400 transition-colors">About Us</a></li>
+              <li><a href="#" onClick={(e) => handleNavigate(e, 'home')} className="hover:text-primary-400 transition-colors">Home</a></li>
+              <li><a href="#services" onClick={(e) => handleNavigate(e, null, '#services')} className="hover:text-primary-400 transition-colors">Services</a></li>
+              <li><a href="#solutions" onClick={(e) => handleNavigate(e, null, '#solutions')} className="hover:text-primary-400 transition-colors">Solutions</a></li>
+              <li><a href="#research" onClick={(e) => handleNavigate(e, null, '#research')} className="hover:text-primary-400 transition-colors">Research</a></li>
+              <li><a href="#about" onClick={(e) => handleNavigate(e, null, '#about')} className="hover:text-primary-400 transition-colors">About Us</a></li>
             </ul>
           </div>
 

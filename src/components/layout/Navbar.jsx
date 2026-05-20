@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, Beaker } from 'lucide-react';
+import { Menu, X, Beaker, ChevronDown } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import Button from '../ui/Button';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [activeDropdown, setActiveDropdown] = useState(null);
+  const [mobileDropdownOpen, setMobileDropdownOpen] = useState(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -14,13 +17,34 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const handleNavigate = (page, href) => {
+    setIsOpen(false);
+    if (page) {
+      window.dispatchEvent(new CustomEvent('navigate', { detail: { page } }));
+    } else if (href) {
+      // If it's a section link, we might need to go to home first then scroll,
+      // but for simplicity, let's just go home and scroll
+      window.dispatchEvent(new CustomEvent('navigate', { detail: { page: 'home' } }));
+      setTimeout(() => {
+        const element = document.querySelector(href);
+        if (element) element.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
+    }
+  };
+
   const navLinks = [
-    { name: 'Home', href: '#' },
-    { name: 'Services', href: '#services' },
-    { name: 'Solutions', href: '#solutions' },
-    { name: 'Research', href: '#research' },
-    { name: 'About', href: '#about' },
-    { name: 'Contact', href: '#contact' },
+    { name: 'Home', action: () => handleNavigate('home') },
+    { name: 'Services', action: () => handleNavigate(null, '#services') },
+    { 
+      name: 'Solutions', 
+      isDropdown: true,
+      items: [
+        { name: 'Overview', action: () => handleNavigate(null, '#solutions') },
+        { name: 'Preclinical Development', action: () => handleNavigate('preclinical') }
+      ]
+    },
+    { name: 'Research', action: () => handleNavigate(null, '#research') },
+    { name: 'About', action: () => handleNavigate(null, '#about') },
   ];
 
   return (
@@ -33,7 +57,10 @@ const Navbar = () => {
     >
       <div className="container-custom flex items-center justify-between">
         {/* Logo Section */}
-        <div className="flex items-center gap-2.5">
+        <div 
+          className="flex items-center gap-2.5 cursor-pointer" 
+          onClick={() => handleNavigate('home')}
+        >
           <div className="bg-gradient-to-tr from-primary-600 to-teal-500 p-2.5 rounded-xl shadow-lg shadow-primary-500/10">
             <Beaker className="w-5 h-5 text-white" />
           </div>
@@ -45,21 +72,55 @@ const Navbar = () => {
         {/* Desktop Menu */}
         <div className="hidden md:flex items-center gap-8">
           {navLinks.map((link) => (
-            <a
+            <div
               key={link.name}
-              href={link.href}
-              className="relative text-sm font-semibold text-slate-200 hover:text-teal-300 transition-colors duration-300 py-1.5 group"
+              className="relative"
+              onMouseEnter={() => link.isDropdown && setActiveDropdown(link.name)}
+              onMouseLeave={() => link.isDropdown && setActiveDropdown(null)}
             >
-              {link.name}
-              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-primary-400 to-teal-400 transition-all duration-300 group-hover:w-full"></span>
-            </a>
+              <button
+                onClick={link.isDropdown ? undefined : link.action}
+                className="relative text-sm font-semibold text-slate-200 hover:text-teal-300 transition-colors duration-300 py-1.5 group flex items-center gap-1"
+              >
+                {link.name}
+                {link.isDropdown && <ChevronDown className="w-4 h-4" />}
+                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-primary-400 to-teal-400 transition-all duration-300 group-hover:w-full"></span>
+              </button>
+              
+              {/* Desktop Dropdown */}
+              {link.isDropdown && (
+                <AnimatePresence>
+                  {activeDropdown === link.name && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 10 }}
+                      transition={{ duration: 0.2 }}
+                      className="absolute top-full left-0 mt-2 w-56 bg-slate-900 border border-slate-800 rounded-xl shadow-xl overflow-hidden py-2"
+                    >
+                      {link.items.map((item) => (
+                        <button
+                          key={item.name}
+                          onClick={() => {
+                            setActiveDropdown(null);
+                            item.action();
+                          }}
+                          className="w-full text-left px-4 py-2.5 text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800 transition-colors"
+                        >
+                          {item.name}
+                        </button>
+                      ))}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              )}
+            </div>
           ))}
           <Button
             size="sm"
             className="bg-gradient-to-r from-primary-600 to-teal-500 hover:from-primary-700 hover:to-teal-600 border-0 text-white font-semibold shadow-md shadow-teal-500/10 hover:shadow-teal-500/25 active:scale-95 transition-all duration-300"
             onClick={() => {
-              const element = document.getElementById('contact');
-              if (element) element.scrollIntoView({ behavior: 'smooth' });
+              window.dispatchEvent(new CustomEvent('openContactModal'));
             }}
           >
             Contact Us
@@ -76,31 +137,71 @@ const Navbar = () => {
       </div>
 
       {/* Mobile Menu Dropdown */}
-      {isOpen && (
-        <div className="md:hidden absolute top-full left-0 w-full bg-gradient-to-b from-slate-950/95 to-primary-950/95 backdrop-blur-xl border-t border-slate-900/60 shadow-2xl p-6 flex flex-col gap-4 animate-fade-in">
-          {navLinks.map((link) => (
-            <a
-              key={link.name}
-              href={link.href}
-              className="text-lg font-semibold text-slate-200 hover:text-teal-300 px-3 py-2 rounded-xl transition-all duration-200 hover:bg-white/5"
-              onClick={() => setIsOpen(false)}
-            >
-              {link.name}
-            </a>
-          ))}
-          <Button
-            className="w-full mt-2 bg-gradient-to-r from-primary-600 to-teal-500 hover:from-primary-700 hover:to-teal-600 border-0 text-white font-semibold shadow-lg shadow-teal-500/20 active:scale-95 transition-all"
-            variant="primary"
-            onClick={() => {
-              setIsOpen(false);
-              const element = document.getElementById('contact');
-              if (element) element.scrollIntoView({ behavior: 'smooth' });
-            }}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div 
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            className="md:hidden absolute top-full left-0 w-full bg-gradient-to-b from-slate-950/95 to-primary-950/95 backdrop-blur-xl border-t border-slate-900/60 shadow-2xl overflow-hidden"
           >
-            Contact Us
-          </Button>
-        </div>
-      )}
+            <div className="p-6 flex flex-col gap-4">
+              {navLinks.map((link) => (
+                <div key={link.name}>
+                  {link.isDropdown ? (
+                    <div>
+                      <button
+                        onClick={() => setMobileDropdownOpen(mobileDropdownOpen === link.name ? null : link.name)}
+                        className="w-full flex items-center justify-between text-lg font-semibold text-slate-200 hover:text-teal-300 px-3 py-2 rounded-xl transition-all duration-200 hover:bg-white/5"
+                      >
+                        {link.name}
+                        <ChevronDown className={`w-5 h-5 transition-transform ${mobileDropdownOpen === link.name ? 'rotate-180' : ''}`} />
+                      </button>
+                      <AnimatePresence>
+                        {mobileDropdownOpen === link.name && (
+                          <motion.div
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: 'auto', opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            className="overflow-hidden pl-6 flex flex-col gap-2 mt-2"
+                          >
+                            {link.items.map((item) => (
+                              <button
+                                key={item.name}
+                                onClick={item.action}
+                                className="text-left text-slate-400 hover:text-teal-300 py-1.5 transition-colors font-medium"
+                              >
+                                {item.name}
+                              </button>
+                            ))}
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                  ) : (
+                    <button
+                      onClick={link.action}
+                      className="w-full text-left text-lg font-semibold text-slate-200 hover:text-teal-300 px-3 py-2 rounded-xl transition-all duration-200 hover:bg-white/5"
+                    >
+                      {link.name}
+                    </button>
+                  )}
+                </div>
+              ))}
+              <Button
+                className="w-full mt-2 bg-gradient-to-r from-primary-600 to-teal-500 hover:from-primary-700 hover:to-teal-600 border-0 text-white font-semibold shadow-lg shadow-teal-500/20 active:scale-95 transition-all"
+                variant="primary"
+                onClick={() => {
+                  setIsOpen(false);
+                  window.dispatchEvent(new CustomEvent('openContactModal'));
+                }}
+              >
+                Contact Us
+              </Button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </nav>
   );
 };

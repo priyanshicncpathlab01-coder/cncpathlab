@@ -27,7 +27,7 @@ const CTASection = () => {
             design and execute the perfect laboratory strategy.
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-6">
-            <Button size="lg" variant="white">
+            <Button size="lg" variant="white" onClick={() => window.dispatchEvent(new CustomEvent('openContactModal'))}>
               Contact Our Experts
             </Button>
             <Button size="lg" className="bg-transparent border-2 border-white/30 text-white hover:bg-white/10">

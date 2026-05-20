@@ -148,8 +148,7 @@ const Hero = () => {
               size="lg"
               className="w-full lg:w-auto bg-gradient-to-r from-primary-600 to-teal-500 hover:from-primary-700 hover:to-teal-600 border-0 text-white font-bold shadow-lg shadow-teal-500/25 active:scale-95 transition-all duration-300"
               onClick={() => {
-                const element = document.getElementById('contact');
-                if (element) element.scrollIntoView({ behavior: 'smooth' });
+                window.dispatchEvent(new CustomEvent('openContactModal'));
               }}
             >
               Contact Us
