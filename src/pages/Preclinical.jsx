@@ -9,6 +9,7 @@ import Button from '../components/ui/Button';
 import slide1 from '../assets/images/slide1.png';
 import slide2 from '../assets/images/slide2.png';
 import slide3 from '../assets/images/slide3.png';
+import { p } from 'framer-motion/client';
 
 const slides = [
   { image: slide1 },
@@ -68,26 +69,32 @@ const Preclinical = () => {
       title: 'Informed Consent',
       icon: <FileText className="w-8 h-8" />,
       color: 'bg-indigo-500',
+      des:'Informed consent forms (ICFs) should clearly outline sample collection requirements and any associated risks to ensure participants are fully informed before enrollment.',
+      
     },
     {
       title: 'Sample Kits',
       icon: <Package className="w-8 h-8" />,
       color: 'bg-emerald-500',
+      des: 'Sample kits must be prepared and delivered to clinical sites before the first patient enrollment to ensure accurate sample collection, handling, and processing procedures are properly followed.',
     },
     {
       title: 'eCRF',
       icon: <Database className="w-8 h-8" />,
       color: 'bg-blue-500',
+      des:'Development and structuring of the electronic case report form (eCRF)',
     },
     {
       title: 'Site Budgets',
       icon: <BadgeDollarSign className="w-8 h-8" />,
       color: 'bg-amber-500',
+      des:'Site budgets may be affected by the type of biomarker samples collected and the frequency of sample collection throughout the study.',
     },
     {
       title: 'Data Management',
       icon: <BarChart className="w-8 h-8" />,
       color: 'bg-purple-500',
+      des:'Biomarker data management enables data from multiple laboratories to be integrated with clinical data, helping generate more accurate and meaningful insights.',
     },
   ];
 
@@ -122,7 +129,7 @@ const Preclinical = () => {
             transition={{ duration: 0.8, ease: "easeOut" }}
           >
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-black text-white leading-tight tracking-tight mb-6">
-              Preclinical Research and <br/>
+              Preclinical Research and <br />
               <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary-400 via-teal-300 to-primary-300" style={{ WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Regulatory Services</span>
             </h1>
           </motion.div>
@@ -135,7 +142,7 @@ const Preclinical = () => {
       {/* New Solutions Grid */}
       <section className="section-padding bg-slate-50">
         <div className="container-custom">
-          <SectionHeader 
+          <SectionHeader
             title="Solutions to Guide Your Project to Clinical Phases"
             subtitle="Expertly designed preclinical services to ensure a seamless transition from discovery to clinical validation."
           />
@@ -170,7 +177,7 @@ const Preclinical = () => {
       {/* Specialty Assay Development Section */}
       <section className="section-padding bg-white">
         <div className="container-custom">
-          <SectionHeader 
+          <SectionHeader
             title="Specialty Assay Development"
             subtitle="Precision supports preclinical development with advanced biomarker assay solutions, specializing in large molecule bioanalysis and immunogenicity testing. Our expertise includes:"
           />
@@ -203,7 +210,7 @@ const Preclinical = () => {
       {/* Biomarker Strategy Section */}
       <section className="section-padding bg-slate-50">
         <div className="container-custom">
-          <SectionHeader 
+          <SectionHeader
             title="Biomarker Strategy: Planning Biomarker Analysis for Clinical Trials"
           />
 
@@ -233,6 +240,9 @@ const Preclinical = () => {
                     {card.icon}
                   </div>
                   <h3 className="text-lg font-bold text-slate-900 group-hover:text-primary-600 transition-colors">{card.title}</h3>
+                  <p className="text-sm text-slate-600 leading-relaxed mt-2">
+                    {card.des}
+                  </p>
                 </Card>
               </motion.div>
             ))}
