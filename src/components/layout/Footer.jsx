@@ -74,15 +74,15 @@ const Footer = () => {
             <ul className="space-y-4">
               <li className="flex gap-3">
                 <MapPin className="w-5 h-5 text-primary-500 shrink-0" />
-                <span>123 Biotech Plaza, Science Park, NY 10001</span>
+                <span>2E/21, Block E 2, Jhandewalan Extension, Karol Bagh, New Delhi, Delhi 110055</span>
               </li>
               <li className="flex gap-3">
                 <Phone className="w-5 h-5 text-primary-500 shrink-0" />
-                <span>+1 (555) 000-0000</span>
+                <span>8588029096</span>
               </li>
               <li className="flex gap-3">
                 <Mail className="w-5 h-5 text-primary-500 shrink-0" />
-                <span>contact@cncpathlab.com</span>
+                <span>info@cncpathlab.com</span>
               </li>
             </ul>
           </div>

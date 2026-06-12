@@ -9,6 +9,10 @@ import Button from '../components/ui/Button';
 import slide1 from '../assets/images/slide1.png';
 import slide2 from '../assets/images/slide2.png';
 import slide3 from '../assets/images/slide3.png';
+import diagnosticsImg from "../assets/diagnostics.jpg";
+//console.log("Image path:", diagnosticsImg);
+
+
 import { p } from 'framer-motion/client';
 
 const slides = [
@@ -69,32 +73,38 @@ const Preclinical = () => {
       title: 'Informed Consent',
       icon: <FileText className="w-8 h-8" />,
       color: 'bg-indigo-500',
-      des:'Informed consent forms (ICFs) should clearly outline sample collection requirements and any associated risks to ensure participants are fully informed before enrollment.',
-      
+      des: 'Informed consent forms (ICFs) should clearly outline sample collection requirements and any associated risks to ensure participants are fully informed before enrollment.',
+      size: 'h-[320px] w-[220px]',  // ← add this line
+
+
     },
     {
       title: 'Sample Kits',
       icon: <Package className="w-8 h-8" />,
       color: 'bg-emerald-500',
       des: 'Sample kits must be prepared and delivered to clinical sites before the first patient enrollment to ensure accurate sample collection, handling, and processing procedures are properly followed.',
+      size: 'h-[320px] w-[220px]',
     },
     {
       title: 'eCRF',
       icon: <Database className="w-8 h-8" />,
       color: 'bg-blue-500',
-      des:'Development and structuring of the electronic case report form (eCRF)',
+      des: 'Development and structuring of the electronic case report form (eCRF) to ensure smooth and standardized data capture',
+      size: 'h-[320px] w-[220px]',
     },
     {
       title: 'Site Budgets',
       icon: <BadgeDollarSign className="w-8 h-8" />,
       color: 'bg-amber-500',
-      des:'Site budgets may be affected by the type of biomarker samples collected and the frequency of sample collection throughout the study.',
+      des: 'Site budgets may be affected by the type of biomarker samples collected and the frequency of sample collection throughout the study.',
+      size: 'h-[320px] w-[220px]',
     },
     {
       title: 'Data Management',
       icon: <BarChart className="w-8 h-8" />,
       color: 'bg-purple-500',
-      des:'Biomarker data management enables data from multiple laboratories to be integrated with clinical data, helping generate more accurate and meaningful insights.',
+      des: 'Biomarker data management enables data from multiple laboratories to be integrated with clinical data, helping generate more accurate and meaningful insights.',
+      size: 'h-[320px] w-[220px]',
     },
   ];
 
@@ -214,16 +224,57 @@ const Preclinical = () => {
             title="Biomarker Strategy: Planning Biomarker Analysis for Clinical Trials"
           />
 
-          <div className="max-w-4xl mx-auto mb-16 space-y-6 text-slate-600 text-lg text-center leading-relaxed">
-            <p>
-              Effective biomarker planning plays a vital role in the success of clinical trials. Integrating biomarker management with clinical trial operations from the beginning helps ensure efficient execution, high-quality data collection, and smoother study workflows.
-            </p>
-            <p>
-              Before starting a clinical trial, key biomarker sampling details should be clearly defined, including sample type, processing and handling methods, collection frequency, and intended data usage.
-            </p>
-            <p>
-              Well-planned biomarker strategies help improve the overall effectiveness, accuracy, and reliability of clinical trial outcomes.
-            </p>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto mb-20 relative">
+            {/* Ambient Background Glow for the Section */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-gradient-to-r from-slate-400/5 via-primary-400/5 to-slate-400/5 blur-[120px] rounded-full pointer-events-none z-0"></div>
+
+            {[
+              "Effective biomarker planning plays a vital role in the success of clinical trials. Integrating biomarker management with clinical trial operations from the beginning helps ensure efficient execution, high-quality data collection, and smoother study workflows.",
+              "Before starting a clinical trial, key biomarker sampling details should be clearly defined, including sample type, processing and handling methods, collection frequency, and intended data usage.",
+              "Well-planned biomarker strategies help improve the overall effectiveness, accuracy, and reliability of clinical trial outcomes."
+            ].map((text, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ delay: index * 0.2, duration: 0.8, ease: "easeOut" }}
+                className="relative group h-full z-10"
+              >
+                {/* Soft Outer Dark Glow that intensifies on hover */}
+                <div className="absolute inset-0 bg-slate-800/10 blur-2xl rounded-[2rem] opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"></div>
+
+                {/* Gentle Drifting/Floating Animation */}
+                <motion.div
+                  animate={{ y: [0, -8, 0] }}
+                  transition={{ duration: 6 + index, repeat: Infinity, ease: "easeInOut" }}
+                  className="h-full"
+                >
+                  <Card className="h-full relative overflow-hidden bg-slate-50/50 backdrop-blur-xl border border-slate-200/60 shadow-[0_8px_30px_rgba(0,0,0,0.03)] p-8 md:p-10 flex flex-col justify-center items-center text-center transition-all duration-500 group-hover:-translate-y-2 group-hover:scale-[1.01] group-hover:border-slate-800/30 group-hover:shadow-[0_25px_50px_-12px_rgba(15,23,42,0.2)] rounded-[2rem]">
+
+                    {/* Animated Light Streak / Shimmer */}
+                    <div className="absolute inset-0 overflow-hidden rounded-[2rem] pointer-events-none">
+                      <div className="absolute top-0 left-[-150%] w-[150%] h-full bg-gradient-to-r from-transparent via-white/80 to-transparent skew-x-12 opacity-0 group-hover:opacity-100 group-hover:translate-x-[200%] transition-all duration-1000 ease-in-out"></div>
+                    </div>
+
+                    {/* Elegant Dark Top Edge Highlight */}
+                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/3 h-[2px] bg-gradient-to-r from-transparent via-slate-800/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+
+                    {/* Subtle Corner Accents for Depth */}
+                    <div className="absolute top-0 left-0 w-32 h-32 bg-slate-300/30 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-700 z-0"></div>
+                    <div className="absolute bottom-0 right-0 w-32 h-32 bg-slate-300/30 rounded-full blur-3xl translate-x-1/2 translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-700 z-0"></div>
+
+                    {/* Text Content */}
+                    <div className="relative z-10 flex flex-col h-full items-center justify-center">
+                      <div className="w-8 h-1 bg-gradient-to-r from-slate-400 to-slate-600 mx-auto mb-6 rounded-full opacity-40 group-hover:opacity-100 group-hover:w-16 transition-all duration-700"></div>
+                      <p className="text-slate-700 font-medium text-[1.05rem] leading-loose group-hover:text-slate-950 transition-colors duration-500 tracking-wide">
+                        {text}
+                      </p>
+                    </div>
+                  </Card>
+                </motion.div>
+              </motion.div>
+            ))}
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 max-w-6xl mx-auto">
@@ -235,7 +286,8 @@ const Preclinical = () => {
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
               >
-                <Card className="h-full flex flex-col items-center text-center p-8 group border-transparent hover:border-slate-200 transition-all shadow-sm hover:shadow-xl">
+                <Card className={`${card.size || 'h-full'} flex flex-col items-center text-center p-4 overflow-y-auto group border-transparent hover:border-slate-200 transition-all shadow-sm hover:shadow-xl`}>
+
                   <div className={`${card.color} w-16 h-16 rounded-2xl flex items-center justify-center text-white mb-6 group-hover:scale-110 transition-transform duration-300 shadow-md`}>
                     {card.icon}
                   </div>
@@ -244,8 +296,54 @@ const Preclinical = () => {
                     {card.des}
                   </p>
                 </Card>
+
               </motion.div>
+
             ))}
+          </div>
+          <h2 className="text-2xl font-bold text-center text-slate-900 mt-10 bg-primary-50 py-4 px-6 rounded-xl max-w-2xl mx-auto">
+            Advanced Companion Diagnostic Programs
+          </h2>
+
+          <div className="flex flex-col md:flex-row items-center gap-10 mt-10">
+
+            {/* Left side - text + list */}
+            <div className="flex-1">
+              <p className="text-slate-600 text-lg leading-relaxed mb-4">
+                We help develop companion diagnostic solutions from research to clinical use with expert support at every stage.
+              </p>
+              <ul className="space-y-3">
+                {[
+                  "Biomarker assay development",
+                  "Indications and claims planning",
+                  "Diagnostic product design support",
+                  "FDA and regulatory pathway guidance",
+                  "Point-of-care, lab, and home testing strategies",
+                  "CLIA and quality compliance support",
+                ].map((item, i) => (
+                  <li key={i} className="flex items-center gap-3 text-slate-700 font-medium">
+                    <CheckCircle2 className="w-5 h-5 text-primary-600 shrink-0" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Right side - image */}
+
+            <div className="flex-1 flex justify-center">
+              <img
+                src={diagnosticsImg}
+                alt="Companion diagnostics"
+                style={{
+                  width: "550px",
+                  height: "auto",
+                  borderRadius: "16px",
+                  boxShadow: "0 8px 24px rgba(0,0,0,0.15)",
+                }}
+              />
+            </div>
+
           </div>
         </div>
       </section>

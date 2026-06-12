@@ -11,6 +11,7 @@ import BiospecimenRepository from './sections/BiospecimenRepository';
 import CTASection from './sections/CTASection';
 import ContactModal from './components/ui/ContactModal';
 import Preclinical from './pages/Preclinical';
+import EarlyPhase from './pages/EarlyPhase';
 
 function App() {
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
@@ -52,6 +53,8 @@ function App() {
           </>
         ) : currentPage === 'preclinical' ? (
           <Preclinical />
+        ) : currentPage === 'early-phase' ? (
+          <EarlyPhase />
         ) : null}
       </main>
 

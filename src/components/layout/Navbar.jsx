@@ -40,7 +40,8 @@ const Navbar = () => {
       isDropdown: true,
       items: [
         { name: 'Overview', action: () => handleNavigate(null, '#solutions') },
-        { name: 'Preclinical Development', action: () => handleNavigate('preclinical') }
+        { name: 'Preclinical Development', action: () => handleNavigate('preclinical') },
+        { name: 'Early Phase Development', action: () => handleNavigate('early-phase') }
       ]
     },
     { name: 'Research', action: () => handleNavigate(null, '#research') },
