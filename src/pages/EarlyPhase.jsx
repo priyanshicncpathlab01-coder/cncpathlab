@@ -45,11 +45,7 @@ const EarlyPhase = () => {
         <div
           className="absolute inset-0 z-0"
           style={{
-            backgroundImage: `      linear-gradient(rgba(0,0,0,0.1), rgba(0,0,0,0.1)),
-
-
-
-            url(${earlyphaseImg})`,
+            backgroundImage: `url(${earlyphaseImg})`,
             backgroundPosition: 'center',
             backgroundSize: 'cover',
             backgroundAttachment: 'fixed',

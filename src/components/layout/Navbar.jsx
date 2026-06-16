@@ -34,14 +34,22 @@ const Navbar = () => {
 
   const navLinks = [
     { name: 'Home', action: () => handleNavigate('home') },
-    { name: 'Services', action: () => handleNavigate(null, '#services') },
+    { name: 'Services',
+       action: () => handleNavigate(null, '#services'),
+          
+      isDropdown: true,
+      items: [
+        { name: 'Lab Services', action: () => handleNavigate('Lab-services') },
+      ]
+     },
     { 
       name: 'Solutions', 
       isDropdown: true,
       items: [
         { name: 'Overview', action: () => handleNavigate(null, '#solutions') },
         { name: 'Preclinical Development', action: () => handleNavigate('preclinical') },
-        { name: 'Early Phase Development', action: () => handleNavigate('early-phase') }
+        { name: 'Early Phase Development', action: () => handleNavigate('early-phase') },
+         
       ]
     },
     { name: 'Research', action: () => handleNavigate(null, '#research') },

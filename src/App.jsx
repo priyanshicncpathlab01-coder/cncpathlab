@@ -12,6 +12,7 @@ import CTASection from './sections/CTASection';
 import ContactModal from './components/ui/ContactModal';
 import Preclinical from './pages/Preclinical';
 import EarlyPhase from './pages/EarlyPhase';
+import LabServices from './pages/LabServices';
 
 function App() {
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
@@ -55,6 +56,8 @@ function App() {
           <Preclinical />
         ) : currentPage === 'early-phase' ? (
           <EarlyPhase />
+        ) : currentPage === 'Lab-services' ? (
+          <LabServices />
         ) : null}
       </main>
 
