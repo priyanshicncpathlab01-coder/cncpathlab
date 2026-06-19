@@ -13,6 +13,7 @@ import ContactModal from './components/ui/ContactModal';
 import Preclinical from './pages/Preclinical';
 import EarlyPhase from './pages/EarlyPhase';
 import LabServices from './pages/LabServices';
+import ApoStream from './pages/ApoStream';
 
 function App() {
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
@@ -58,6 +59,8 @@ function App() {
           <EarlyPhase />
         ) : currentPage === 'Lab-services' ? (
           <LabServices />
+        ) : currentPage === 'apostream' ? (
+          <ApoStream />
         ) : null}
       </main>
 

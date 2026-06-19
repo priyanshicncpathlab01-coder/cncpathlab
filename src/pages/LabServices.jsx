@@ -435,7 +435,12 @@ const LabServices = () => {
                                     <p className="text-slate-300 text-lg leading-relaxed">
                                         In addition to CTC applications, ApoStream® supports the enrichment of diverse rare cell populations, including stem cells, progenitor cells, differentiated immune cells, CAR T cells, and other low-frequency immune cell subsets. This capability provides valuable insights for oncology, immuno-oncology, and cell therapy research.
                                     </p>
-                                    <button style={{ backgroundColor: 'white' }}>Learn More</button>
+                                    <button 
+                                        onClick={() => window.dispatchEvent(new CustomEvent('navigate', { detail: { page: 'apostream' } }))}
+                                        className="inline-flex items-center justify-center px-8 py-3 rounded-full bg-white text-slate-900 font-bold hover:bg-slate-100 transition-colors shadow-[0_0_20px_rgba(255,255,255,0.2)] hover:shadow-[0_0_30px_rgba(255,255,255,0.4)]"
+                                    >
+                                        Learn More
+                                    </button>
                                 </div>
                             </div>
                         </motion.div>
