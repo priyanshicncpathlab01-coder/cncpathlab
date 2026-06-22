@@ -28,19 +28,25 @@ const AdvantageSection = ({ benefits }) => {
                     className="absolute inset-0 w-full h-full transition-opacity duration-1000 ease-in-out z-0"
                     style={{ opacity: currentImage === i ? 1 : 0 }}
                 >
-                    <img src={img} alt="" className="w-full h-full object-cover" />
+                    <img
+                        src={img}
+                        alt=""
+                        className="w-full h-full object-cover object-center"
+                        loading="eager"
+                        decoding="async"
+                    />
                 </div>
             ))}
-            
+
             {/* Overlay */}
-            <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-[4px] z-0" />
-            
+            <div className="absolute inset-0 bg-slate-950/46 z-0" />
+
             <div className="container-custom relative z-10">
                 <SectionHeader
                     title={<span className="text-white drop-shadow-md">The ApoStream Advantage</span>}
                     subtitle={<span className="text-slate-200 drop-shadow">Overcoming the limitations of traditional, marker-dependent CTC isolation methods.</span>}
                 />
-                
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto mt-16">
                     {benefits.map((benefit, index) => (
                         <motion.div

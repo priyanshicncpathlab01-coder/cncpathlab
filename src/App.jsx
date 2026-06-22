@@ -14,6 +14,7 @@ import Preclinical from './pages/Preclinical';
 import EarlyPhase from './pages/EarlyPhase';
 import LabServices from './pages/LabServices';
 import ApoStream from './pages/ApoStream';
+import ImmuneMonitoring from './pages/ImmuneMonitoring';
 
 function App() {
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
@@ -61,6 +62,8 @@ function App() {
           <LabServices />
         ) : currentPage === 'apostream' ? (
           <ApoStream />
+        ) : currentPage === 'immune-monitoring' ? (
+          <ImmuneMonitoring />
         ) : null}
       </main>
 

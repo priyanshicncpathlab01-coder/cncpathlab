@@ -154,6 +154,14 @@ const LabServices = () => {
             ? `1px solid ${item.glowColor.replace('0.5', '0.6')}`
             : '1px solid rgba(59, 130, 246, 0.4)';
 
+        const isClickable = item.title === 'Immune Monitoring & Flow Cytometry';
+
+        const handleClick = () => {
+            if (isClickable) {
+                window.dispatchEvent(new CustomEvent('navigate', { detail: { page: 'immune-monitoring' } }));
+            }
+        };
+
         return (
             <motion.div
                 initial={{ opacity: 0, y: 30 }}
@@ -164,9 +172,10 @@ const LabServices = () => {
                 className="h-full"
                 onMouseEnter={() => setIsHovered(true)}
                 onMouseLeave={() => setIsHovered(false)}
+                onClick={handleClick}
             >
                 <div
-                    className="h-full rounded-2xl overflow-hidden relative flex flex-col"
+                    className={`h-full rounded-2xl overflow-hidden relative flex flex-col ${isClickable ? 'cursor-pointer' : ''}`}
                     style={{
                         ...(item.bgStyle || { backgroundColor: '#ffffff' }),
                         boxShadow: isHovered ? hoverGlow : baseGlow,
