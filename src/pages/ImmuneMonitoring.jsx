@@ -5,6 +5,7 @@ import SectionHeader from '../components/ui/SectionHeader';
 import CTASection from '../sections/CTASection';
 import bgVideo from '../assets/bgvideo.mp4';
 import labImg from '../assets/labimage.webp';
+import flowImg from '../assets/flow.webp';
 
 const ServiceGridItem = ({ title, description, icon: Icon, delay }) => (
     <motion.div
@@ -240,19 +241,84 @@ const ImmuneMonitoring = () => {
                 </div>
             </section>
 
-            {/* Epiontis ID Section */}
-            <section className="py-24 bg-white relative z-10">
-                <div className="container-custom">
-                    <div className="max-w-4xl mx-auto text-center mb-16">
-                        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-100 text-slate-700 font-semibold text-sm mb-6 border border-slate-200">
-                            Proprietary Epigenetic Technology
-                        </div>
-                        <h2 className="text-3xl md:text-5xl font-black text-slate-900 mb-6 tracking-tight">
-                            Epiontis ID® — <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-600 to-teal-500">Optimized Immune Profiling</span>
-                        </h2>
-                        <p className="text-lg text-slate-600 leading-relaxed max-w-3xl mx-auto">
-                            Rely on DNA-based quantification for superior stability and reproducibility. Epiontis ID® utilizes cell-type-specific DNA methylation patterns to accurately measure immune cell populations, overcoming the limitations of traditional protein-based methods, particularly when sample integrity or viability is compromised.
-                        </p>
+            {/* Comprehensive Endpoint Assessment Section */}
+            <section className="py-24 bg-white relative z-10 overflow-hidden">
+                <div className="container-custom relative z-10">
+                    <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-16 items-center">
+                        <motion.div
+                            initial={{ opacity: 0, x: -30 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            viewport={{ once: true }}
+                            className="flex-1 space-y-8"
+                        >
+                            <div>
+                                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-md bg-teal-50 text-teal-700 font-semibold text-sm mb-4 border border-teal-200">
+                                    Tailored Assays & Diagnostics
+                                </div>
+                                <h2 className="text-3xl md:text-4xl lg:text-5xl font-black leading-tight tracking-tight text-slate-900">
+                                    Comprehensive <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-600 to-teal-500">Endpoint Assessment</span> <br className="hidden lg:block"/> Across Diverse Applications
+                                </h2>
+                                <p className="text-lg text-slate-600 mt-6 leading-relaxed">
+                                    All assays can be tailored to specific study requirements and developed in compliance with ISO, GCP, GLP, CAP, and CLIA standards.
+                                </p>
+                            </div>
+
+                            <ul className="space-y-4">
+                                {[
+                                    "Detection and quantification of rare cell populations based on phenotype, apoptotic activity, or phosphorylation profiles.",
+                                    "Detailed immunophenotyping with accurate enumeration of immune cell subsets.",
+                                    "Evaluation of activation and exhaustion marker expression to monitor immune cell functionality.",
+                                    "Analysis of apoptosis and cell cycle dynamics, including assessment of histone methylation patterns.",
+                                    "Measurement of cytokine secretion and production to characterize immune responses."
+                                ].map((item, idx) => (
+                                    <li key={idx} className="flex items-start gap-3">
+                                        <div className="mt-1 bg-primary-100 p-1 rounded-full text-primary-600 shrink-0">
+                                            <Target className="w-4 h-4" />
+                                        </div>
+                                        <span className="text-slate-700 leading-relaxed">{item}</span>
+                                    </li>
+                                ))}
+                            </ul>
+
+                            <div className="p-6 bg-slate-50 rounded-2xl border border-slate-200 shadow-sm">
+                                <h3 className="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
+                                    <ActivitySquare className="w-6 h-6 text-teal-600" />
+                                    CAR T-Cell & CAR NK-Cell Therapy Support
+                                </h3>
+                                <ul className="space-y-3">
+                                    <li className="flex items-start gap-3">
+                                        <div className="mt-2 w-1.5 h-1.5 rounded-full bg-teal-500 shrink-0" />
+                                        <span className="text-slate-700 text-sm md:text-base leading-relaxed">Characterization of engineered cells through lineage-specific marker expression profiling.</span>
+                                    </li>
+                                    <li className="flex items-start gap-3">
+                                        <div className="mt-2 w-1.5 h-1.5 rounded-full bg-teal-500 shrink-0" />
+                                        <span className="text-slate-700 text-sm md:text-base leading-relaxed">Monitoring of CAR T/NK cell persistence, expansion, and immunogenicity throughout treatment.</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </motion.div>
+
+                        <motion.div
+                            initial={{ opacity: 0, x: 30 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            viewport={{ once: true }}
+                            className="flex-1 w-full relative"
+                        >
+                            <div className="relative rounded-3xl overflow-hidden shadow-2xl border border-slate-200 group">
+                                {/* Image */}
+                                <img 
+                                    src={flowImg} 
+                                    alt="Comprehensive Endpoint Assessment" 
+                                    className="w-full h-auto md:h-[600px] object-cover transition-transform duration-700 group-hover:scale-105"
+                                />
+                                {/* Overlay Gradient */}
+                                <div className="absolute inset-0 bg-gradient-to-tr from-primary-900/20 via-transparent to-transparent opacity-60 mix-blend-multiply pointer-events-none" />
+                            </div>
+                            
+                            {/* Decorative Elements */}
+                            <div className="absolute -top-6 -right-6 w-32 h-32 bg-teal-100 rounded-full blur-2xl opacity-50 -z-10 pointer-events-none" />
+                            <div className="absolute -bottom-8 -left-8 w-40 h-40 bg-primary-100 rounded-full blur-3xl opacity-50 -z-10 pointer-events-none" />
+                        </motion.div>
                     </div>
                 </div>
             </section>

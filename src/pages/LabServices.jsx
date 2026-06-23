@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Fingerprint, TestTube2, Wind, Thermometer, UserCheck } from 'lucide-react';
 import SectionHeader from '../components/ui/SectionHeader';
@@ -8,6 +9,7 @@ import labImg from '../assets/labimage.webp';
 import bgVideo from '../assets/bgvideo.mp4';
 
 const LabServices = () => {
+    const navigate = useNavigate();
     const services = [
         {
             title: 'Specialty Lab Services',
@@ -158,7 +160,8 @@ const LabServices = () => {
 
         const handleClick = () => {
             if (isClickable) {
-                window.dispatchEvent(new CustomEvent('navigate', { detail: { page: 'immune-monitoring' } }));
+                navigate('/immune-monitoring');
+                window.scrollTo({ top: 0, behavior: 'instant' });
             }
         };
 
@@ -175,7 +178,7 @@ const LabServices = () => {
                 onClick={handleClick}
             >
                 <div
-                    className={`h-full rounded-2xl overflow-hidden relative flex flex-col ${isClickable ? 'cursor-pointer' : ''}`}
+                    className={`h-full rounded-2xl overflow-hidden relative flex flex-col group ${isClickable ? 'cursor-pointer' : ''}`}
                     style={{
                         ...(item.bgStyle || { backgroundColor: '#ffffff' }),
                         boxShadow: isHovered ? hoverGlow : baseGlow,
@@ -193,6 +196,23 @@ const LabServices = () => {
                         <p className={`leading-relaxed flex-grow ${item.bgStyle ? 'text-slate-200' : 'text-slate-600'}`}>
                             {item.description}
                         </p>
+                        
+                        <div className="mt-8 pt-6 border-t border-white/10 flex items-center justify-between">
+                            <span className={`text-sm font-semibold tracking-wider uppercase transition-colors duration-300 ${
+                                item.bgStyle ? 'text-white/80 group-hover:text-white' : 'text-primary-600 group-hover:text-primary-700'
+                            }`}>
+                                Explore More
+                            </span>
+                            <div className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 ${
+                                item.bgStyle 
+                                    ? 'bg-white/10 text-white group-hover:bg-white group-hover:text-slate-900' 
+                                    : 'bg-primary-50 text-primary-600 group-hover:bg-primary-600 group-hover:text-white'
+                            }`}>
+                                <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                                </svg>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </motion.div>
@@ -445,7 +465,7 @@ const LabServices = () => {
                                         In addition to CTC applications, ApoStream® supports the enrichment of diverse rare cell populations, including stem cells, progenitor cells, differentiated immune cells, CAR T cells, and other low-frequency immune cell subsets. This capability provides valuable insights for oncology, immuno-oncology, and cell therapy research.
                                     </p>
                                     <button 
-                                        onClick={() => window.dispatchEvent(new CustomEvent('navigate', { detail: { page: 'apostream' } }))}
+                                        onClick={() => { navigate('/apostream'); window.scrollTo({ top: 0, behavior: 'instant' }); }}
                                         className="inline-flex items-center justify-center px-8 py-3 rounded-full bg-white text-slate-900 font-bold hover:bg-slate-100 transition-colors shadow-[0_0_20px_rgba(255,255,255,0.2)] hover:shadow-[0_0_30px_rgba(255,255,255,0.4)]"
                                     >
                                         Learn More

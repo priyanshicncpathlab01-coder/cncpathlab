@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Menu, X, Beaker, ChevronDown } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Button from '../ui/Button';
@@ -8,6 +9,8 @@ const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [mobileDropdownOpen, setMobileDropdownOpen] = useState(null);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -17,29 +20,34 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const handleNavigate = (page, href) => {
+  const handleNavigate = (path, href) => {
     setIsOpen(false);
-    if (page) {
-      window.dispatchEvent(new CustomEvent('navigate', { detail: { page } }));
+    if (path) {
+      navigate(path);
+      window.scrollTo({ top: 0, behavior: 'instant' });
     } else if (href) {
-      // If it's a section link, we might need to go to home first then scroll,
-      // but for simplicity, let's just go home and scroll
-      window.dispatchEvent(new CustomEvent('navigate', { detail: { page: 'home' } }));
-      setTimeout(() => {
+      // If it's a section link and we're not on home, go to home first then scroll
+      if (location.pathname !== '/') {
+        navigate('/');
+        setTimeout(() => {
+          const element = document.querySelector(href);
+          if (element) element.scrollIntoView({ behavior: 'smooth' });
+        }, 100);
+      } else {
         const element = document.querySelector(href);
         if (element) element.scrollIntoView({ behavior: 'smooth' });
-      }, 100);
+      }
     }
   };
 
   const navLinks = [
-    { name: 'Home', action: () => handleNavigate('home') },
+    { name: 'Home', action: () => handleNavigate('/') },
     { name: 'Services',
        action: () => handleNavigate(null, '#services'),
           
       isDropdown: true,
       items: [
-        { name: 'Lab Services', action: () => handleNavigate('Lab-services') },
+        { name: 'Lab Services', action: () => handleNavigate('/lab-services') },
       ]
      },
     { 
@@ -47,8 +55,8 @@ const Navbar = () => {
       isDropdown: true,
       items: [
         { name: 'Overview', action: () => handleNavigate(null, '#solutions') },
-        { name: 'Preclinical Development', action: () => handleNavigate('preclinical') },
-        { name: 'Early Phase Development', action: () => handleNavigate('early-phase') },
+        { name: 'Preclinical Development', action: () => handleNavigate('/preclinical') },
+        { name: 'Early Phase Development', action: () => handleNavigate('/early-phase') },
          
       ]
     },
@@ -68,7 +76,7 @@ const Navbar = () => {
         {/* Logo Section */}
         <div 
           className="flex items-center gap-2.5 cursor-pointer" 
-          onClick={() => handleNavigate('home')}
+          onClick={() => handleNavigate('/')}
         >
           <div className="bg-gradient-to-tr from-primary-600 to-teal-500 p-2.5 rounded-xl shadow-lg shadow-primary-500/10">
             <Beaker className="w-5 h-5 text-white" />
