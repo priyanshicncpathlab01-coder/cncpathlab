@@ -16,6 +16,7 @@ import EarlyPhase from './pages/EarlyPhase';
 import LabServices from './pages/LabServices';
 import ApoStream from './pages/ApoStream';
 import ImmuneMonitoring from './pages/ImmuneMonitoring';
+import BioanalyticalTesting from './pages/BioanalyticalTesting';
 
 const HomePage = () => (
   <>
@@ -54,6 +55,7 @@ function App() {
           <Route path="/lab-services" element={<LabServices />} />
           <Route path="/apostream" element={<ApoStream />} />
           <Route path="/immune-monitoring" element={<ImmuneMonitoring />} />
+          <Route path="/bioanalytical-testing" element={<BioanalyticalTesting />} />
           {/* Fallback to home for unknown routes */}
           <Route path="*" element={<HomePage />} />
         </Routes>

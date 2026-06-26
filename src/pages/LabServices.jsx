@@ -156,11 +156,14 @@ const LabServices = () => {
             ? `1px solid ${item.glowColor.replace('0.5', '0.6')}`
             : '1px solid rgba(59, 130, 246, 0.4)';
 
-        const isClickable = item.title === 'Immune Monitoring & Flow Cytometry';
+        const isClickable = item.title === 'Immune Monitoring & Flow Cytometry' || item.title === 'Bioanalysis';
 
         const handleClick = () => {
-            if (isClickable) {
+            if (item.title === 'Immune Monitoring & Flow Cytometry') {
                 navigate('/immune-monitoring');
+                window.scrollTo({ top: 0, behavior: 'instant' });
+            } else if (item.title === 'Bioanalysis') {
+                navigate('/bioanalytical-testing');
                 window.scrollTo({ top: 0, behavior: 'instant' });
             }
         };
