@@ -162,13 +162,13 @@ const TechCard = ({ card, index }) => {
             onMouseLeave={() => setHovered(false)}
         >
             <div
-                className="flex flex-col h-full rounded-2xl p-8 backdrop-blur-md"
+                className="flex flex-col h-full rounded-2xl p-8"
                 style={{
-                    background: hovered ? 'rgba(255,255,255,0.13)' : 'rgba(255,255,255,0.07)',
-                    border: `1px solid ${hovered ? 'rgba(255,255,255,0.30)' : 'rgba(255,255,255,0.12)'}`,
+                    background: hovered ? 'rgba(15, 23, 42, 0.95)' : 'rgba(15, 23, 42, 0.85)',
+                    border: `1px solid ${hovered ? 'rgba(255,255,255,0.25)' : 'rgba(255,255,255,0.12)'}`,
                     boxShadow: hovered
-                        ? '0 20px 52px rgba(0,0,0,0.32), 0 0 28px rgba(14,165,233,0.18)'
-                        : '0 4px 24px rgba(0,0,0,0.22)',
+                        ? '0 20px 52px rgba(0,0,0,0.5), 0 0 28px rgba(14,165,233,0.25)'
+                        : '0 8px 32px rgba(0,0,0,0.4)',
                     transform: hovered ? 'translateY(-7px) scale(1.01)' : 'translateY(0) scale(1)',
                     transition: 'all 0.32s ease',
                 }}
@@ -244,28 +244,30 @@ const BioanalyticalTesting = () => {
 
     return (
         <div className="flex flex-col min-h-screen bg-slate-50 relative">
-            <section className="relative min-h-[85vh] flex items-center justify-center pt-24 pb-20 overflow-hidden bg-slate-950">
+            <section className="relative w-full aspect-video min-h-[50vh] sm:min-h-[60vh] max-h-[800px] flex items-center justify-center overflow-hidden bg-slate-950">
                 <video
                     autoPlay
                     muted
                     loop
                     playsInline
-                    className="absolute inset-0 w-full h-full object-cover z-0"
+                    className="absolute inset-0 w-full h-full object-cover object-center z-0"
                 >
                     <source src={biovideo} type="video/mp4" />
                 </video>
-                <div className="absolute inset-0 z-[1] bg-gradient-to-b from-slate-950/70 via-slate-950/50 to-slate-950/90 pointer-events-none" />
 
-                <div className="container-custom relative z-10 text-center max-w-5xl mx-auto mt-10">
+                {/* Minimal overlay to let the video shine sharp and clear */}
+                <div className="absolute inset-0 bg-gradient-to-b from-slate-750/50 via-slate-900/30 to-slate-950/60 z-[1]" />
+
+                <div className="container-custom relative z-10 text-center max-w-5xl mx-auto px-4 sm:px-6 pt-16">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8 }}
-                        className="p-8 md:p-12 rounded-3xl backdrop-blur-sm bg-slate-900/40 border border-white/10 shadow-2xl"
+                        className="p-8 sm:p-10 md:p-12 rounded-2xl bg-black/70 border border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.7)] inline-block mx-auto"
                     >
                         <h1
-                            className="text-4xl md:text-5xl lg:text-6xl font-black text-white leading-tight tracking-tight mb-6"
-                            style={{ textShadow: '0 2px 20px rgba(0,0,0,0.5)' }}
+                            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-white leading-tight tracking-tight"
+                            style={{ textShadow: '0 4px 16px rgba(0,0,0,0.9), 0 2px 4px rgba(0,0,0,0.8)' }}
                         >
                             Biologic and Large Molecule Characterization
                         </h1>
@@ -316,9 +318,8 @@ const BioanalyticalTesting = () => {
                         </AnimatePresence>
                     </motion.div>
 
-                    {/* Layered overlays for readability */}
-                    <div className="absolute inset-0 bg-slate-950/62" />
-                    <div className="absolute inset-0 bg-gradient-to-b from-slate-950/50 via-slate-900/25 to-slate-950/55" />
+                    {/* Minimal overlay for sharp background image */}
+                    <div className="absolute inset-0 bg-black/10" />
                 </div>
 
                 {/* Content */}
@@ -326,14 +327,14 @@ const BioanalyticalTesting = () => {
                     <SectionHeader
                         title={
                             <span
-                                className="text-white"
-                                style={{ textShadow: '0 2px 20px rgba(0,0,0,0.45)' }}
+                                className="text-white inline-block bg-slate-950/85 px-5 py-2 sm:px-6 sm:py-3 rounded-2xl border border-white/10 shadow-lg"
+                                style={{ textShadow: '0 2px 10px rgba(0,0,0,0.5)' }}
                             >
                                 Innovative Bioanalysis Technologies
                             </span>
                         }
                         subtitle={
-                            <span className="text-slate-300">
+                            <span className="text-slate-100 block bg-slate-950/85 p-5 sm:px-6 sm:py-4 rounded-2xl mt-2 border border-white/10 shadow-xl leading-relaxed text-sm sm:text-base">
                                 We combine established technologies, proprietary platforms, and validated biomarker assays to generate reliable, high-quality data across a wide range of biological samples, including nucleic acids, proteins, cells, and tissues.
                             </span>
                         }

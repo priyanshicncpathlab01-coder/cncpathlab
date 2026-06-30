@@ -3,8 +3,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Phone, Mail, MapPin } from 'lucide-react';
 import Button from '../components/ui/Button';
 
-import slide1 from '../assets/images/slide1.png';
-import slide2 from '../assets/images/slide2.png';
+import slide1 from '../assets/images/earlyphase.webp';
+import slide2 from '../assets/labimage.webp';
 import slide3 from '../assets/images/slide3.png';
 
 const slides = [
@@ -130,15 +130,17 @@ const Hero = () => {
             <div className="flex flex-col sm:flex-row flex-wrap justify-center lg:justify-start gap-4 md:gap-6 text-sm text-slate-300 mt-4 font-medium">
               <div className="flex items-center justify-center lg:justify-start gap-2">
                 <Phone className="w-4 h-4 text-teal-400 shrink-0" />
-                <span>+1 (555) 000-0000</span>
+                <span>8588029096
+</span>
               </div>
               <div className="flex items-center justify-center lg:justify-start gap-2">
                 <Mail className="w-4 h-4 text-teal-400 shrink-0" />
-                <span>contact@cncpathlab.com</span>
+                <span>info@cncpathlab.com</span>
               </div>
               <div className="flex items-center justify-center lg:justify-start gap-2">
                 <MapPin className="w-4 h-4 text-teal-400 shrink-0" />
-                <span>123 Biotech Plaza, Science Park, NY 10001</span>
+                <span>2E/21, Block E 2, Jhandewalan Extension, Karol Bagh, New Delhi, Delhi 110055
+</span>
               </div>
             </div>
           </div>
