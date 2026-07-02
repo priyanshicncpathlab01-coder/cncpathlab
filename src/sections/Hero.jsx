@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Phone, Mail, MapPin } from 'lucide-react';
 import Button from '../components/ui/Button';
@@ -28,8 +28,53 @@ const slides = [
   }
 ];
 
+const PARALLAX_SPEED = 0.4; // Background moves at 40% of scroll speed
+
 const Hero = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const sectionRef = useRef(null);
+  const bgRef = useRef(null);
+  const rafId = useRef(null);
+
+  // Uses getBoundingClientRect so the offset is always relative to the viewport,
+  // regardless of ancestor positioning or sticky navbars.
+  const updateParallax = useCallback(() => {
+    if (!sectionRef.current || !bgRef.current) return;
+
+    const rect = sectionRef.current.getBoundingClientRect();
+
+    // Only apply while the hero is intersecting the viewport
+    if (rect.bottom > 0 && rect.top < window.innerHeight) {
+      // rect.top is 0 when section top aligns with viewport top, negative while scrolled past.
+      // Translating DOWN by (-rect.top * speed) makes the background move up more slowly
+      // than the foreground, producing the parallax depth effect.
+      const offset = -rect.top * PARALLAX_SPEED;
+      bgRef.current.style.transform = `translate3d(0, ${offset}px, 0)`;
+    }
+
+    rafId.current = null;
+  }, []);
+
+  const handleScroll = useCallback(() => {
+    // rAF acts as the throttle — only one frame scheduled at a time
+    if (rafId.current === null) {
+      rafId.current = requestAnimationFrame(updateParallax);
+    }
+  }, [updateParallax]);
+
+  useEffect(() => {
+    // Respect prefers-reduced-motion for accessibility
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) return;
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    updateParallax(); // Set correct position if page is already scrolled on mount
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (rafId.current !== null) cancelAnimationFrame(rafId.current);
+    };
+  }, [handleScroll, updateParallax]);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -43,9 +88,21 @@ const Hero = () => {
   };
 
   return (
-    <section className="relative h-screen min-h-[750px] flex items-center overflow-visible">
-      {/* Background Slideshow with Ken Burns Effect */}
-      <div className="absolute inset-0 z-0 overflow-hidden">
+    <>
+    <section ref={sectionRef} className="relative h-screen min-h-[750px] flex items-center overflow-hidden">
+      {/* Background Slideshow with Ken Burns + Parallax Effect */}
+      {/* Extends 50% above/below the section so the background never exposes a gap
+          while translating. At PARALLAX_SPEED=0.4 the max translate is ~40% of
+          section height; 50% gives a comfortable safety margin on all screen sizes. */}
+      <div
+        ref={bgRef}
+        className="absolute left-0 right-0 z-0 overflow-hidden"
+        style={{
+          willChange: 'transform',
+          top: '-50%',
+          height: '200%',
+        }}
+      >
         <AnimatePresence initial={false}>
           <motion.div
             key={currentSlide}
@@ -118,47 +175,49 @@ const Hero = () => {
         </div>
       </div>
 
-      {/* Horizontal Contact Us CTA Glassmorphism Overlay */}
-      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-[92%] max-w-6xl z-30 px-1">
-        <div className="relative bg-slate-900/80 backdrop-blur-xl border border-white/10 shadow-2xl rounded-2xl md:rounded-3xl p-6 md:p-8 flex flex-col lg:flex-row items-center justify-between gap-6 lg:gap-8 before:absolute before:top-0 before:left-0 before:right-0 before:h-1 before:bg-gradient-to-r before:from-primary-500 before:to-teal-400 before:rounded-t-2xl md:before:rounded-t-3xl overflow-hidden">
-          <div className="flex-1 text-center lg:text-left">
-            <h3 className="text-xl md:text-2xl font-bold text-white mb-2">Connect With Our Specialists</h3>
-            <p className="text-sm md:text-base text-slate-300">
-              Ready to accelerate your specialty clinical studies? Speak with our diagnostic path lab experts.
-            </p>
-            {/* Contact details */}
-            <div className="flex flex-col sm:flex-row flex-wrap justify-center lg:justify-start gap-4 md:gap-6 text-sm text-slate-300 mt-4 font-medium">
-              <div className="flex items-center justify-center lg:justify-start gap-2">
-                <Phone className="w-4 h-4 text-teal-400 shrink-0" />
-                <span>8588029096
-</span>
-              </div>
-              <div className="flex items-center justify-center lg:justify-start gap-2">
-                <Mail className="w-4 h-4 text-teal-400 shrink-0" />
-                <span>info@cncpathlab.com</span>
-              </div>
-              <div className="flex items-center justify-center lg:justify-start gap-2">
-                <MapPin className="w-4 h-4 text-teal-400 shrink-0" />
-                <span>2E/21, Block E 2, Jhandewalan Extension, Karol Bagh, New Delhi, Delhi 110055
-</span>
+    </section>
+
+      {/* Horizontal Contact Us CTA Glassmorphism */}
+      <div className="w-full bg-slate-200 py-10 md:py-14">
+        <div className="w-[92%] max-w-6xl mx-auto px-1">
+          <div className="relative bg-slate-900/80 backdrop-blur-xl border border-white/10 shadow-2xl rounded-2xl md:rounded-3xl p-6 md:p-8 flex flex-col lg:flex-row items-center justify-between gap-6 lg:gap-8 before:absolute before:top-0 before:left-0 before:right-0 before:h-1 before:bg-gradient-to-r before:from-primary-500 before:to-teal-400 before:rounded-t-2xl md:before:rounded-t-3xl overflow-hidden">
+            <div className="flex-1 text-center lg:text-left">
+              <h3 className="text-xl md:text-2xl font-bold text-white mb-2">Connect With Our Specialists</h3>
+              <p className="text-sm md:text-base text-slate-300">
+                Ready to accelerate your specialty clinical studies? Speak with our diagnostic path lab experts.
+              </p>
+              {/* Contact details */}
+              <div className="flex flex-col sm:flex-row flex-wrap justify-center lg:justify-start gap-4 md:gap-6 text-sm text-slate-300 mt-4 font-medium">
+                <div className="flex items-center justify-center lg:justify-start gap-2">
+                  <Phone className="w-4 h-4 text-teal-400 shrink-0" />
+                  <span>8588029096</span>
+                </div>
+                <div className="flex items-center justify-center lg:justify-start gap-2">
+                  <Mail className="w-4 h-4 text-teal-400 shrink-0" />
+                  <span>info@cncpathlab.com</span>
+                </div>
+                <div className="flex items-center justify-center lg:justify-start gap-2">
+                  <MapPin className="w-4 h-4 text-teal-400 shrink-0" />
+                  <span>2E/21, Block E 2, Jhandewalan Extension, Karol Bagh, New Delhi, Delhi 110055</span>
+                </div>
               </div>
             </div>
-          </div>
 
-          <div className="shrink-0 w-full lg:w-auto">
-            <Button
-              size="lg"
-              className="w-full lg:w-auto bg-gradient-to-r from-primary-600 to-teal-500 hover:from-primary-700 hover:to-teal-600 border-0 text-white font-bold shadow-lg shadow-teal-500/25 active:scale-95 transition-all duration-300"
-              onClick={() => {
-                window.dispatchEvent(new CustomEvent('openContactModal'));
-              }}
-            >
-              Contact Us
-            </Button>
+            <div className="shrink-0 w-full lg:w-auto">
+              <Button
+                size="lg"
+                className="w-full lg:w-auto bg-gradient-to-r from-primary-600 to-teal-500 hover:from-primary-700 hover:to-teal-600 border-0 text-white font-bold shadow-lg shadow-teal-500/25 active:scale-95 transition-all duration-300"
+                onClick={() => {
+                  window.dispatchEvent(new CustomEvent('openContactModal'));
+                }}
+              >
+                Contact Us
+              </Button>
+            </div>
           </div>
         </div>
       </div>
-    </section>
+    </>
   );
 };
 
