@@ -22,7 +22,8 @@ import WholeGenomeSequencing from './pages/WholeGenomeSequencing';
 const HomePage = () => (
   <>
     <Hero />
-    <IntroServices />
+        <IntroServices />
+
     <BiomarkerAnalysis />
     <SampleExpertise />
     <TranslationalScience />

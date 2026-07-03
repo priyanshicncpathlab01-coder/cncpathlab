@@ -17,6 +17,14 @@ import {
     Activity,
     Target,
     ClipboardCheck,
+    MessageCircle,
+    ClipboardList,
+    ChevronRight,
+    ChevronDown,
+    ShieldCheck,
+    Users,
+    Truck,
+    Lock,
 } from 'lucide-react';
 import SectionHeader from '../components/ui/SectionHeader';
 import CTASection from '../sections/CTASection';
@@ -47,6 +55,156 @@ const ServiceGridItem = ({ title, description, icon: Icon, delay }) => (
 
             <div className="absolute -bottom-8 -right-8 w-32 h-32 bg-gradient-to-tl from-teal-50/50 to-transparent rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
         </div>
+    </motion.div>
+);
+
+const workflowPalettes = {
+    blue: {
+        corner: 'bg-blue-600',
+        border: 'border-l-blue-500',
+        iconWrap: 'bg-blue-50 text-blue-600',
+        underline: 'bg-blue-500',
+        tag: 'bg-blue-50 text-blue-700',
+    },
+    teal: {
+        corner: 'bg-teal-500',
+        border: 'border-l-teal-500',
+        iconWrap: 'bg-teal-50 text-teal-600',
+        underline: 'bg-teal-500',
+        tag: 'bg-teal-50 text-teal-700',
+    },
+    purple: {
+        corner: 'bg-purple-600',
+        border: 'border-l-purple-500',
+        iconWrap: 'bg-purple-50 text-purple-600',
+        underline: 'bg-purple-500',
+        tag: 'bg-purple-50 text-purple-700',
+    },
+};
+
+const WorkflowCard = ({ step, title, description, icon: Icon, tag, tagIcon: TagIcon, color, delay }) => {
+    const palette = workflowPalettes[color] || workflowPalettes.blue;
+
+    return (
+        <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay, duration: 0.6, ease: 'easeOut' }}
+            whileHover={{ y: -8, transition: { duration: 0.3, ease: 'easeOut' } }}
+            className={`relative h-full bg-white rounded-2xl border-l-4 ${palette.border} border-y border-r border-slate-100 shadow-[0_4px_20px_rgba(15,23,42,0.06)] hover:shadow-xl transition-shadow duration-500 overflow-hidden`}
+        >
+            {/* Corner ribbon with step number */}
+            <div
+                className={`absolute top-0 right-0 w-20 h-20 ${palette.corner}`}
+                style={{ clipPath: 'polygon(100% 0, 100% 100%, 0 0)' }}
+            />
+            <span className="absolute top-3 right-3 text-white text-sm font-bold z-10">{step}</span>
+
+            <div className="relative p-8 flex flex-col items-center text-center">
+                <div className={`w-20 h-20 rounded-full ${palette.iconWrap} flex items-center justify-center mb-6`}>
+                    <Icon className="w-9 h-9" />
+                </div>
+
+                <h4 className="text-xl font-extrabold text-slate-900 mb-2">{title}</h4>
+                <div className={`w-10 h-1 rounded-full ${palette.underline} mb-4`} />
+                <p className="text-slate-600 leading-relaxed mb-6">{description}</p>
+
+                {tag && (
+                    <div className={`inline-flex items-center justify-center gap-2 w-full px-4 py-3 rounded-xl font-semibold text-sm ${palette.tag}`}>
+                        {TagIcon && <TagIcon className="w-5 h-5" />}
+                        {tag}
+                    </div>
+                )}
+            </div>
+        </motion.div>
+    );
+};
+
+const applicationPalettes = [
+    {
+        name: 'Sky Blue',
+        bgGradient: 'from-sky-400/20 via-sky-500/10 to-white/5',
+        border: 'border-sky-300/25 group-hover:border-sky-200/50',
+        iconBg: 'bg-sky-400/20 border-sky-300/40 text-sky-200',
+        glowGradient: 'from-sky-400/50 to-sky-600/20',
+    },
+    {
+        name: 'Ice Blue',
+        bgGradient: 'from-cyan-200/20 via-cyan-300/10 to-white/5',
+        border: 'border-cyan-200/25 group-hover:border-cyan-100/50',
+        iconBg: 'bg-cyan-200/20 border-cyan-200/40 text-cyan-100',
+        glowGradient: 'from-cyan-200/50 to-cyan-400/20',
+    },
+    {
+        name: 'Azure',
+        bgGradient: 'from-blue-500/20 via-blue-600/10 to-white/5',
+        border: 'border-blue-400/25 group-hover:border-blue-300/50',
+        iconBg: 'bg-blue-500/20 border-blue-400/40 text-blue-200',
+        glowGradient: 'from-blue-500/50 to-blue-700/20',
+    },
+    {
+        name: 'Powder Blue',
+        bgGradient: 'from-blue-200/20 via-indigo-100/10 to-white/5',
+        border: 'border-blue-200/25 group-hover:border-blue-100/50',
+        iconBg: 'bg-blue-200/20 border-blue-200/40 text-blue-100',
+        glowGradient: 'from-blue-200/50 to-blue-300/20',
+    },
+    {
+        name: 'Cyan Blue',
+        bgGradient: 'from-cyan-500/20 via-cyan-600/10 to-white/5',
+        border: 'border-cyan-400/25 group-hover:border-cyan-300/50',
+        iconBg: 'bg-cyan-500/20 border-cyan-400/40 text-cyan-200',
+        glowGradient: 'from-cyan-500/50 to-cyan-700/20',
+    },
+    {
+        name: 'Steel Blue',
+        bgGradient: 'from-slate-400/20 via-blue-500/10 to-white/5',
+        border: 'border-slate-300/25 group-hover:border-slate-200/50',
+        iconBg: 'bg-slate-400/20 border-slate-300/40 text-slate-100',
+        glowGradient: 'from-slate-400/50 to-blue-600/20',
+    },
+];
+
+const ApplicationCard = ({ title, description, icon: Icon, palette, delay }) => (
+    <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ delay, duration: 0.5 }}
+        whileHover={{ y: -8, scale: 1.02, transition: { duration: 0.3, ease: 'easeOut' } }}
+        className="group relative h-full"
+    >
+        {/* Soft glow on hover */}
+        <div className={`absolute -inset-1 rounded-[1.75rem] bg-gradient-to-br ${palette.glowGradient} blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
+
+        <div className={`relative z-10 h-full p-8 rounded-[1.75rem] bg-gradient-to-br ${palette.bgGradient} backdrop-blur-2xl border ${palette.border} shadow-[0_8px_32px_rgba(0,0,0,0.35)] group-hover:shadow-[0_25px_60px_rgba(0,0,0,0.45)] transition-all duration-500 flex flex-col items-center text-center overflow-hidden`}>
+            <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-6 border ${palette.iconBg} group-hover:scale-110 transition-transform duration-500`}>
+                <Icon className="w-8 h-8" />
+            </div>
+            <h3 className="text-xl md:text-2xl font-extrabold text-white mb-3 tracking-tight">{title}</h3>
+            <p className="text-slate-200 leading-relaxed font-medium">{description}</p>
+        </div>
+    </motion.div>
+);
+
+const WorkflowConnector = ({ delay }) => (
+    <motion.div
+        initial={{ opacity: 0, scale: 0.7 }}
+        whileInView={{ opacity: 1, scale: 1 }}
+        viewport={{ once: true }}
+        transition={{ delay, duration: 0.5, ease: 'easeOut' }}
+        className="relative flex md:flex-col items-center justify-center h-10 md:h-auto md:w-10 mx-auto"
+    >
+        <div className="absolute w-[2px] h-full md:h-[2px] md:w-full bg-gradient-to-b md:bg-gradient-to-r from-primary-300 via-teal-400 to-primary-300 rounded-full opacity-70" />
+        <motion.div
+            animate={{ scale: [1, 1.15, 1] }}
+            transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut', delay }}
+            className="relative z-10 w-7 h-7 rounded-full bg-white border border-primary-200 shadow-sm flex items-center justify-center text-primary-500"
+        >
+            <ChevronDown className="w-4 h-4 md:hidden" />
+            <ChevronRight className="w-4 h-4 hidden md:block" />
+        </motion.div>
     </motion.div>
 );
 
@@ -122,9 +280,9 @@ const WholeGenomeSequencing = () => {
     ];
 
     const workflowSteps = [
-        { step: '01', title: 'Consultation', description: 'Set up your account and design your study alongside our scientific team to define coverage, platform, and analysis needs.' },
-        { step: '02', title: 'Order Placement', description: 'Receive a detailed quote, shipping instructions, and project kickoff so your samples move seamlessly into the pipeline.' },
-        { step: '03', title: 'QC & Delivery', description: 'Built-in quality control at every stage, with real-time progress updates and secure results delivered through your client portal.' },
+        { step: '01', title: 'Consultation', description: 'Set up your account and design your study alongside our scientific team to define coverage, platform, and analysis needs.', icon: MessageCircle, color: 'blue', tag: 'Expert Guidance', tagIcon: Users },
+        { step: '02', title: 'Order Placement', description: 'Receive a detailed quote, shipping instructions, and project kickoff so your samples move seamlessly into the pipeline.', icon: ClipboardList, color: 'teal', tag: 'Seamless Process', tagIcon: Truck },
+        { step: '03', title: 'QC & Delivery', description: 'Built-in quality control at every stage, with real-time progress updates and secure results delivered through your client portal.', icon: ShieldCheck, color: 'purple', tag: 'Reliable Results', tagIcon: Lock },
     ];
 
     const sampleRequirements = [
@@ -348,57 +506,45 @@ const WholeGenomeSequencing = () => {
                 </div>
             </section>
 
-            {/* Workflow Timeline */}
-            <section className="py-24 bg-slate-50 relative z-10">
-                <div className="container-custom">
+            {/* Workflow Cards */}
+            <section className="py-24 bg-slate-50 relative z-10 overflow-hidden">
+                {/* Decorative background accents */}
+                <div className="absolute top-0 left-[10%] w-72 h-72 bg-primary-400/10 rounded-full blur-3xl pointer-events-none" />
+                <div className="absolute bottom-0 right-[10%] w-72 h-72 bg-teal-400/10 rounded-full blur-3xl pointer-events-none" />
+
+                <div className="container-custom relative z-10">
                     <SectionHeader title="A Streamlined Project Workflow" subtitle="From first consultation to final report, every step is tracked and quality-controlled." />
-                    <div className="max-w-5xl mx-auto mt-16 relative">
-                        <div className="hidden md:block absolute top-8 left-0 w-full h-1 bg-slate-200 z-0"></div>
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-4 relative z-10">
-                            {workflowSteps.map((phase, i) => (
-                                <motion.div
-                                    key={i}
-                                    initial={{ opacity: 0, y: 20 }}
-                                    whileInView={{ opacity: 1, y: 0 }}
-                                    viewport={{ once: true }}
-                                    transition={{ delay: i * 0.15 }}
-                                    className="flex flex-col items-center text-center group"
-                                >
-                                    <div className="w-16 h-16 rounded-full bg-white border-4 border-slate-200 flex items-center justify-center font-bold text-slate-400 text-xl mb-4 group-hover:border-primary-500 group-hover:text-primary-600 transition-colors shadow-sm">
-                                        {phase.step}
-                                    </div>
-                                    <h4 className="font-bold text-lg text-slate-900 mb-2 px-2">{phase.title}</h4>
-                                    <p className="text-slate-600 leading-relaxed px-2">{phase.description}</p>
-                                </motion.div>
-                            ))}
-                        </div>
+                    <div className="grid grid-cols-1 md:[grid-template-columns:1fr_auto_1fr_auto_1fr] gap-6 md:gap-4 max-w-6xl mx-auto mt-16 items-stretch">
+                        {workflowSteps.map((phase, i) => (
+                            <React.Fragment key={i}>
+                                <WorkflowCard {...phase} delay={i * 0.15} />
+                                {i < workflowSteps.length - 1 && (
+                                    <WorkflowConnector delay={i * 0.15 + 0.2} />
+                                )}
+                            </React.Fragment>
+                        ))}
                     </div>
                 </div>
             </section>
 
             {/* Applications Grid */}
-            <section className="py-24 bg-white relative z-10 border-t border-slate-100">
+            <section className="py-24 bg-black relative z-10 border-t border-slate-100">
                 <div className="container-custom">
                     <SectionHeader
                         title="Applications Across Research & Clinical Domains"
                         subtitle="Genome-wide coverage supports discovery and diagnostic goals across a broad range of therapeutic areas."
+                        className="[&_h2]:text-white [&_p]:text-slate-300"
                     />
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto mt-16">
                         {applications.map((feature, index) => (
-                            <motion.div
+                            <ApplicationCard
                                 key={index}
-                                initial={{ opacity: 0, y: 20 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true }}
-                                transition={{ delay: index * 0.1 }}
-                                className="bg-slate-50 p-8 rounded-2xl shadow-sm border border-slate-200 text-center flex flex-col items-center hover:-translate-y-1 hover:shadow-xl transition-all duration-300"
-                            >
-                                <div className="w-16 h-16 bg-primary-50 rounded-full flex items-center justify-center mb-6 text-primary-600">
-                                    <feature.icon className="w-8 h-8" />
-                                </div>
-                                <h3 className="text-xl font-bold text-slate-900 mb-4">{feature.title}</h3>
-                                <p className="text-slate-600 leading-relaxed">{feature.description}</p>
-                            </motion.div>
+                                title={feature.title}
+                                description={feature.description}
+                                icon={feature.icon}
+                                palette={applicationPalettes[index % applicationPalettes.length]}
+                                delay={index * 0.1}
+                            />
                         ))}
                     </div>
                 </div>
