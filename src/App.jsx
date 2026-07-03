@@ -17,6 +17,7 @@ import LabServices from './pages/LabServices';
 import ApoStream from './pages/ApoStream';
 import ImmuneMonitoring from './pages/ImmuneMonitoring';
 import BioanalyticalTesting from './pages/BioanalyticalTesting';
+import WholeGenomeSequencing from './pages/WholeGenomeSequencing';
 
 const HomePage = () => (
   <>
@@ -56,6 +57,7 @@ function App() {
           <Route path="/apostream" element={<ApoStream />} />
           <Route path="/immune-monitoring" element={<ImmuneMonitoring />} />
           <Route path="/bioanalytical-testing" element={<BioanalyticalTesting />} />
+          <Route path="/whole-genome-sequencing" element={<WholeGenomeSequencing />} />
           {/* Fallback to home for unknown routes */}
           <Route path="*" element={<HomePage />} />
         </Routes>

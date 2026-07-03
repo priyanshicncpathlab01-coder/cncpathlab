@@ -60,7 +60,13 @@ const Navbar = () => {
          
       ]
     },
-    { name: 'Research', action: () => handleNavigate(null, '#research') },
+    {
+      name: 'Genomics',
+      isDropdown: true,
+      items: [
+        { name: 'Whole Genome Sequencing', action: () => handleNavigate('/whole-genome-sequencing') },
+      ]
+    },
     { name: 'About', action: () => handleNavigate(null, '#about') },
   ];
 
