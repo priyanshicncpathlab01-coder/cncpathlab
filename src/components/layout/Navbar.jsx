@@ -48,6 +48,7 @@ const Navbar = () => {
       isDropdown: true,
       items: [
         { name: 'Lab Services', action: () => handleNavigate('/lab-services') },
+        { name: '10x Genomics Visium HD', action: () => handleNavigate('/visium-hd') },
       ]
      },
     { 
@@ -65,6 +66,8 @@ const Navbar = () => {
       isDropdown: true,
       items: [
         { name: 'Whole Genome Sequencing', action: () => handleNavigate('/whole-genome-sequencing') },
+        { name: 'Whole Exome Sequencing', action: () => handleNavigate('/whole-exome-sequencing') },
+        { name: 'Whole Plasmid Sequencing', action: () => handleNavigate('/whole-plasmid-sequencing') },
       ]
     },
     { name: 'About', action: () => handleNavigate(null, '#about') },

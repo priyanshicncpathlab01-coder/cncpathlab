@@ -18,6 +18,9 @@ import ApoStream from './pages/ApoStream';
 import ImmuneMonitoring from './pages/ImmuneMonitoring';
 import BioanalyticalTesting from './pages/BioanalyticalTesting';
 import WholeGenomeSequencing from './pages/WholeGenomeSequencing';
+import WholeExomeSequencing from './pages/WholeExomeSequencing';
+import WholePlasmidSequencing from './pages/WholePlasmidSequencing';
+import VisiumHD from './pages/VisiumHD';
 
 const HomePage = () => (
   <>
@@ -59,6 +62,9 @@ function App() {
           <Route path="/immune-monitoring" element={<ImmuneMonitoring />} />
           <Route path="/bioanalytical-testing" element={<BioanalyticalTesting />} />
           <Route path="/whole-genome-sequencing" element={<WholeGenomeSequencing />} />
+          <Route path="/whole-exome-sequencing" element={<WholeExomeSequencing />} />
+          <Route path="/whole-plasmid-sequencing" element={<WholePlasmidSequencing />} />
+          <Route path="/visium-hd" element={<VisiumHD />} />
           {/* Fallback to home for unknown routes */}
           <Route path="*" element={<HomePage />} />
         </Routes>

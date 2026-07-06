@@ -1,80 +1,55 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence, useScroll, useTransform, useSpring, useMotionValue, useReducedMotion } from 'framer-motion';
 import { Phone, Mail, MapPin } from 'lucide-react';
 import Button from '../components/ui/Button';
-
-import slide1 from '../assets/images/earlyphase.webp';
-import slide2 from '../assets/labimage.webp';
-import slide3 from '../assets/images/slide3.png';
+import bgVideo from '../assets/biovideo.mp4';
+import videoPoster from '../assets/labimage.webp';
 
 const slides = [
   {
-    image: slide1,
     title: "CNC Path Lab",
     subtitle: "Pioneering Specialty Diagnostic & Biomarker Analysis Services",
     tagline: "Advancing Precision Medicine"
   },
   {
-    image: slide2,
     title: "CNC Path Lab",
     subtitle: "World-Class Central Laboratory Solutions for Clinical Trials",
     tagline: "Scientific Excellence"
   },
   {
-    image: slide3,
     title: "CNC Path Lab",
     subtitle: "High-Throughput Translational Research & Biospecimen Repository",
     tagline: "State-of-the-Art Precision"
   }
 ];
 
-const PARALLAX_SPEED = 0.4; // Background moves at 40% of scroll speed
-
 const Hero = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
-  const sectionRef = useRef(null);
-  const bgRef = useRef(null);
-  const rafId = useRef(null);
+  const shouldReduceMotion = useReducedMotion();
+  
+  // Parallax & Scroll Zoom Effect
+  const { scrollY } = useScroll();
+  const yParallax = useTransform(scrollY, [0, 1000], [0, shouldReduceMotion ? 0 : 120]);
+  const scaleScroll = useTransform(scrollY, [0, 800], [1, shouldReduceMotion ? 1 : 1.2]);
 
-  // Uses getBoundingClientRect so the offset is always relative to the viewport,
-  // regardless of ancestor positioning or sticky navbars.
-  const updateParallax = useCallback(() => {
-    if (!sectionRef.current || !bgRef.current) return;
+  // 3D Tilt Effect
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
 
-    const rect = sectionRef.current.getBoundingClientRect();
+  const rotateX = useSpring(useTransform(mouseY, [-400, 400], [shouldReduceMotion ? 0 : 6, shouldReduceMotion ? 0 : -6]), { stiffness: 150, damping: 30 });
+  const rotateY = useSpring(useTransform(mouseX, [-400, 400], [shouldReduceMotion ? 0 : -6, shouldReduceMotion ? 0 : 6]), { stiffness: 150, damping: 30 });
 
-    // Only apply while the hero is intersecting the viewport
-    if (rect.bottom > 0 && rect.top < window.innerHeight) {
-      // rect.top is 0 when section top aligns with viewport top, negative while scrolled past.
-      // Translating DOWN by (-rect.top * speed) makes the background move up more slowly
-      // than the foreground, producing the parallax depth effect.
-      const offset = -rect.top * PARALLAX_SPEED;
-      bgRef.current.style.transform = `translate3d(0, ${offset}px, 0)`;
-    }
+  const handleMouseMove = (e) => {
+    if (shouldReduceMotion) return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    mouseX.set(e.clientX - rect.left - rect.width / 2);
+    mouseY.set(e.clientY - rect.top - rect.height / 2);
+  };
 
-    rafId.current = null;
-  }, []);
-
-  const handleScroll = useCallback(() => {
-    // rAF acts as the throttle — only one frame scheduled at a time
-    if (rafId.current === null) {
-      rafId.current = requestAnimationFrame(updateParallax);
-    }
-  }, [updateParallax]);
-
-  useEffect(() => {
-    // Respect prefers-reduced-motion for accessibility
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (prefersReducedMotion) return;
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    updateParallax(); // Set correct position if page is already scrolled on mount
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-      if (rafId.current !== null) cancelAnimationFrame(rafId.current);
-    };
-  }, [handleScroll, updateParallax]);
+  const handleMouseLeave = () => {
+    mouseX.set(0);
+    mouseY.set(0);
+  };
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -89,92 +64,76 @@ const Hero = () => {
 
   return (
     <>
-    <section ref={sectionRef} className="relative h-screen min-h-[750px] flex items-center overflow-hidden">
-      {/* Background Slideshow with Ken Burns + Parallax Effect */}
-      {/* Extends 50% above/below the section so the background never exposes a gap
-          while translating. At PARALLAX_SPEED=0.4 the max translate is ~40% of
-          section height; 50% gives a comfortable safety margin on all screen sizes. */}
-      <div
-        ref={bgRef}
-        className="absolute left-0 right-0 z-0 overflow-hidden"
-        style={{
-          willChange: 'transform',
-          top: '-50%',
-          height: '200%',
-        }}
-      >
-        <AnimatePresence initial={false}>
-          <motion.div
-            key={currentSlide}
-            initial={{ opacity: 0, scale: 1.08 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 1.5, ease: "easeInOut" }}
-            className="absolute inset-0"
-          >
-            <img
-              src={slides[currentSlide].image}
-              alt={slides[currentSlide].subtitle}
-              className="w-full h-full object-cover"
-            />
-            {/* Dark gradient overlay for readability */}
-            <div className="absolute inset-0 bg-gradient-to-b from-slate-950/80 via-slate-900/50 to-slate-950/85"></div>
-          </motion.div>
-        </AnimatePresence>
+    <section className="relative min-h-[750px] flex items-center overflow-hidden bg-black pt-28 pb-16 lg:pt-32 lg:pb-24 perspective-[2000px]">
+      
+      {/* Background Video */}
+      <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0 pointer-events-none">
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover"
+          poster={videoPoster}
+        >
+          <source src={bgVideo} type="video/mp4" />
+        </video>
+        {/* Subtle Dark Overlay for contrast (25% opacity) */}
+        <div className="absolute inset-0 bg-slate-950/25 mix-blend-multiply"></div>
       </div>
 
-      {/* Hero Typography overlay */}
-      <div className="container-custom relative z-10 pt-20 flex flex-col items-center text-center justify-center h-full max-w-5xl mx-auto pb-24">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={currentSlide}
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -30 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            className="flex flex-col items-center"
-          >
-            <span className="inline-block px-4 py-1.5 rounded-full bg-gradient-to-r from-primary-500/20 to-teal-400/20 border border-teal-400/30 text-teal-300 text-sm font-bold tracking-wider uppercase mb-6 shadow-sm shadow-teal-500/5">
-              {slides[currentSlide].tagline}
-            </span>
-            <h1 className="text-5xl md:text-7xl lg:text-8xl font-black text-white leading-none tracking-tight mb-6">
-              CNC <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary-400 via-teal-300 to-primary-300" style={{ WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Path Lab</span>
-            </h1>
-            <p className="text-lg md:text-2xl text-slate-200 mb-8 leading-relaxed max-w-2xl font-medium">
-              {slides[currentSlide].subtitle}
-            </p>
-            <div className="flex gap-4">
-              <Button
-                size="lg"
-                className="bg-gradient-to-r from-primary-600 to-teal-500 hover:from-primary-700 hover:to-teal-600 border-0 text-white shadow-lg shadow-teal-500/20 active:scale-95 transition-all duration-300"
-                onClick={() => {
-                  const element = document.getElementById('services');
-                  if (element) element.scrollIntoView({ behavior: 'smooth' });
-                }}
+      <div className="container-custom relative z-10 w-full max-w-5xl mx-auto px-4 lg:px-8">
+        <div className="flex flex-col items-center text-center min-h-[380px] justify-center relative w-full">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={currentSlide}
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -30 }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+                className="flex flex-col items-center absolute w-full"
               >
-                Explore Services
-              </Button>
+                <span className="inline-block px-4 py-1.5 rounded-full bg-gradient-to-r from-primary-500/20 to-teal-400/20 border border-teal-400/30 text-teal-300 text-sm font-bold tracking-wider uppercase mb-6 shadow-sm shadow-teal-500/5">
+                  {slides[currentSlide].tagline}
+                </span>
+                <h1 className="text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black text-white leading-none tracking-tight mb-6">
+                  CNC <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary-400 via-teal-300 to-primary-300" style={{ WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Path Lab</span>
+                </h1>
+                <p className="text-lg md:text-xl xl:text-2xl text-slate-200 mb-8 leading-relaxed max-w-xl font-medium">
+                  {slides[currentSlide].subtitle}
+                </p>
+                <div className="flex gap-4">
+                  <Button
+                    size="lg"
+                    className="bg-gradient-to-r from-primary-600 to-teal-500 hover:from-primary-700 hover:to-teal-600 border-0 text-white shadow-lg shadow-teal-500/20 active:scale-95 transition-all duration-300"
+                    onClick={() => {
+                      const element = document.getElementById('services');
+                      if (element) element.scrollIntoView({ behavior: 'smooth' });
+                    }}
+                  >
+                    Explore Services
+                  </Button>
+                </div>
+              </motion.div>
+            </AnimatePresence>
+
+            {/* Slide Bullet Indicators */}
+            <div className="absolute bottom-0 left-0 right-0 flex justify-center gap-3 z-20">
+              {slides.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => handleDotClick(index)}
+                  className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                    currentSlide === index
+                      ? 'bg-teal-400 w-8 shadow-md shadow-teal-400/30'
+                      : 'bg-white/40 hover:bg-white/60'
+                  }`}
+                  aria-label={`Go to slide ${index + 1}`}
+                />
+              ))}
             </div>
-          </motion.div>
-        </AnimatePresence>
-
-        {/* Slide Bullet Indicators */}
-        <div className="absolute bottom-28 left-0 right-0 flex justify-center gap-3 z-20">
-          {slides.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => handleDotClick(index)}
-              className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                currentSlide === index
-                  ? 'bg-teal-400 w-8 shadow-md shadow-teal-400/30'
-                  : 'bg-white/40 hover:bg-white/60'
-              }`}
-              aria-label={`Go to slide ${index + 1}`}
-            />
-          ))}
+          </div>
         </div>
-      </div>
-
     </section>
 
       {/* Horizontal Contact Us CTA Glassmorphism */}
@@ -222,4 +181,3 @@ const Hero = () => {
 };
 
 export default Hero;
-
