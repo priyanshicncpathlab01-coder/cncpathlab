@@ -21,6 +21,12 @@ import WholeGenomeSequencing from './pages/WholeGenomeSequencing';
 import WholeExomeSequencing from './pages/WholeExomeSequencing';
 import WholePlasmidSequencing from './pages/WholePlasmidSequencing';
 import VisiumHD from './pages/VisiumHD';
+import CytokineProfiling from './pages/CytokineProfiling';
+import TissueImagingAnalysis from './pages/TissueImagingAnalysis';
+import AboutUs from './pages/AboutUs';
+import TargetBiomarkerValidation from './pages/TargetBiomarkerValidation';
+import MultiplexImmunofluorescence from './pages/MultiplexImmunofluorescence';
+import Immunohistochemistry from './pages/Immunohistochemistry';
 
 const HomePage = () => (
   <>
@@ -65,6 +71,12 @@ function App() {
           <Route path="/whole-exome-sequencing" element={<WholeExomeSequencing />} />
           <Route path="/whole-plasmid-sequencing" element={<WholePlasmidSequencing />} />
           <Route path="/visium-hd" element={<VisiumHD />} />
+          <Route path="/cytokine-profiling" element={<CytokineProfiling />} />
+          <Route path="/tissue-imaging-analysis" element={<TissueImagingAnalysis />} />
+          <Route path="/about" element={<AboutUs />} />
+          <Route path="/target-biomarker-validation" element={<TargetBiomarkerValidation />} />
+          <Route path="/multiplex-immunofluorescence" element={<MultiplexImmunofluorescence />} />
+          <Route path="/immunohistochemistry" element={<Immunohistochemistry />} />
           {/* Fallback to home for unknown routes */}
           <Route path="*" element={<HomePage />} />
         </Routes>

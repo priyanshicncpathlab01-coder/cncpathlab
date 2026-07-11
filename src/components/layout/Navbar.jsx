@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Menu, X, Beaker, ChevronDown } from 'lucide-react';
+import { Menu, X, ChevronDown } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Button from '../ui/Button';
+import labLogo from '../../assets/logo.webp';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -48,7 +49,6 @@ const Navbar = () => {
       isDropdown: true,
       items: [
         { name: 'Lab Services', action: () => handleNavigate('/lab-services') },
-        { name: '10x Genomics Visium HD', action: () => handleNavigate('/visium-hd') },
       ]
      },
     { 
@@ -68,9 +68,10 @@ const Navbar = () => {
         { name: 'Whole Genome Sequencing', action: () => handleNavigate('/whole-genome-sequencing') },
         { name: 'Whole Exome Sequencing', action: () => handleNavigate('/whole-exome-sequencing') },
         { name: 'Whole Plasmid Sequencing', action: () => handleNavigate('/whole-plasmid-sequencing') },
+        { name: '10x Genomics Visium HD', action: () => handleNavigate('/visium-hd') },
       ]
     },
-    { name: 'About', action: () => handleNavigate(null, '#about') },
+    { name: 'About Us', action: () => handleNavigate('/about') },
   ];
 
   return (
@@ -83,15 +84,19 @@ const Navbar = () => {
     >
       <div className="container-custom flex items-center justify-between">
         {/* Logo Section */}
-        <div 
-          className="flex items-center gap-2.5 cursor-pointer" 
+        <div
+          className="flex items-center gap-2.5 cursor-pointer"
           onClick={() => handleNavigate('/')}
         >
-          <div className="bg-gradient-to-tr from-primary-600 to-teal-500 p-2.5 rounded-xl shadow-lg shadow-primary-500/10">
-            <Beaker className="w-5 h-5 text-white" />
+          <div className="h-14 sm:h-16 lg:h-20 w-auto rounded-xl overflow-hidden shrink-0 shadow-lg shadow-primary-500/10">
+            <img
+              src={labLogo}
+              alt="CNC Path Lab Logo"
+              className="h-14 md:h-16 lg:h-20 xl:h-24 w-auto object-contain transition-all duration-300"
+            />
           </div>
-          <span className="text-xl font-bold tracking-tight text-white flex items-center">
-            CNC <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary-400 to-teal-300 ml-1.5 font-extrabold" style={{ WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Path Lab</span>
+          <span className="text-lg sm:text-xl font-bold tracking-tight text-white flex items-center whitespace-nowrap">
+            CNC <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary-400 to-teal-300 ml-1.5 font-extrabold" style={{ WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>PathLab</span>
           </span>
         </div>
 

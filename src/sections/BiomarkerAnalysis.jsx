@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import { Dna, Waves, Layers, Image as ImageIcon, BarChart, CheckCircle2, ArrowRight } from 'lucide-react';
 import SectionHeader from '../components/ui/SectionHeader';
 import immuneImg from '../assets/immune.webp';
@@ -10,15 +11,23 @@ import cytokineImg from '../assets/cytokine.webp';
 import biomarker from '../assets/apoadvantagetwo.webp';
 
 const analyses = [
-  { title: 'Immune Monitoring & Flow Cytometry', icon: Layers, image: immuneImg },
-  { title: 'Bioanalysis', icon: BarChart, image: bioanalysisImg },
-  { title: 'Genomics', icon: Dna, image: genomicsImg },
-  { title: 'Tissue Imaging & Analysis', icon: ImageIcon, image: tissueImg },
-  { title: 'Cytokine Profiling & Proteomics', icon: Waves, image: cytokineImg },
-  { title: 'Target & Biomarker Validation', icon: CheckCircle2, image: biomarker },
+  { title: 'Immune Monitoring & Flow Cytometry', icon: Layers, image: immuneImg,path:'/immune-monitoring'},
+  { title: 'Bioanalysis', icon: BarChart, image: bioanalysisImg,path:'/bioanalytical-testing'},
+  { title: 'Genomics', icon: Dna, image: genomicsImg ,path:'/whole-genome-sequencing'},
+  { title: 'Tissue Imaging & Analysis', icon: ImageIcon, image: tissueImg, path: '/tissue-imaging-analysis' },
+  { title: 'Cytokine Profiling & Proteomics', icon: Waves, image: cytokineImg, path: '/cytokine-profiling' },
+  { title: 'Target & Biomarker Validation', icon: CheckCircle2, image: biomarker, path: '/target-biomarker-validation' },
 ];
 
 const BiomarkerAnalysis = () => {
+  const navigate = useNavigate();
+
+  const handleCardClick = (path) => {
+    if (!path) return;
+    navigate(path);
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  };
+
   return (
     <section id="solutions" className="section-padding bg-slate-50">
       <div className="container-custom">
@@ -37,6 +46,10 @@ const BiomarkerAnalysis = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.07 }}
+                onClick={item.path ? () => handleCardClick(item.path) : undefined}
+                role={item.path ? 'link' : undefined}
+                tabIndex={item.path ? 0 : undefined}
+                onKeyDown={item.path ? (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleCardClick(item.path); } } : undefined}
                 className="relative rounded-2xl overflow-hidden h-64 group cursor-pointer"
               >
                 {/* Background image */}
