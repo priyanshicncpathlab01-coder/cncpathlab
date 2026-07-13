@@ -27,6 +27,9 @@ import AboutUs from './pages/AboutUs';
 import TargetBiomarkerValidation from './pages/TargetBiomarkerValidation';
 import MultiplexImmunofluorescence from './pages/MultiplexImmunofluorescence';
 import Immunohistochemistry from './pages/Immunohistochemistry';
+import RTPCR from './pages/RTPCR';
+import FishIsh from './pages/FishIsh';
+import PathologyServices from './pages/PathologyServices';
 
 const HomePage = () => (
   <>
@@ -77,6 +80,9 @@ function App() {
           <Route path="/target-biomarker-validation" element={<TargetBiomarkerValidation />} />
           <Route path="/multiplex-immunofluorescence" element={<MultiplexImmunofluorescence />} />
           <Route path="/immunohistochemistry" element={<Immunohistochemistry />} />
+          <Route path="/rt-pcr" element={<RTPCR />} />
+          <Route path="/fish-ish" element={<FishIsh />} />
+          <Route path="/pathology-services" element={<PathologyServices />} />
           {/* Fallback to home for unknown routes */}
           <Route path="*" element={<HomePage />} />
         </Routes>

@@ -88,11 +88,11 @@ const Navbar = () => {
           className="flex items-center gap-2.5 cursor-pointer"
           onClick={() => handleNavigate('/')}
         >
-          <div className="h-14 sm:h-16 lg:h-20 w-auto rounded-xl overflow-hidden shrink-0 shadow-lg shadow-primary-500/10">
+          <div className="flex items-center shrink-0">
             <img
               src={labLogo}
               alt="CNC Path Lab Logo"
-              className="h-14 md:h-16 lg:h-20 xl:h-24 w-auto object-contain transition-all duration-300"
+              className="h-14 sm:h-16 md:h-20 lg:h-24 w-auto object-contain transition-all duration-300"
             />
           </div>
           <span className="text-lg sm:text-xl font-bold tracking-tight text-white flex items-center whitespace-nowrap">

@@ -20,11 +20,13 @@ const technologyCards = [
     title: 'FISH / ISH',
     description: 'Fluorescence and chromogenic in situ hybridization to detect gene rearrangements, copy number changes, and RNA expression at the single-cell level.',
     icon: Dna,
+    path: '/fish-ish',
   },
   {
     title: 'Pathology',
     description: 'Expert histopathological review and diagnostic interpretation by board-certified pathologists to support accurate, evidence-based conclusions.',
     icon: Search,
+    path: '/pathology-services',
   },
   {
     title: 'Gene Expression Profiling of Biopsies',
@@ -35,6 +37,7 @@ const technologyCards = [
     title: 'RT-PCR',
     description: 'Reverse transcription polymerase chain reaction for highly sensitive detection and quantification of RNA targets directly from biopsy specimens.',
     icon: TestTube,
+    path: '/rt-pcr',
   },
 ];
 
