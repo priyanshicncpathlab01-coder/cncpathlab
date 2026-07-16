@@ -169,12 +169,7 @@ const SampleCard = ({ type, index }) => {
             </ul>
 
             {/* Explore Capability button */}
-            <div className="mt-auto">
-              <span className={`inline-flex items-center gap-1.5 text-sm font-semibold ${type.accent} transition-all duration-300 group-hover:gap-2.5`}>
-                Explore Capability
-                <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
-              </span>
-            </div>
+            
           </div>
         </div>
       </motion.div>

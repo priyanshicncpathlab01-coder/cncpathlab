@@ -21,6 +21,7 @@ import WholeGenomeSequencing from './pages/WholeGenomeSequencing';
 import WholeExomeSequencing from './pages/WholeExomeSequencing';
 import WholePlasmidSequencing from './pages/WholePlasmidSequencing';
 import VisiumHD from './pages/VisiumHD';
+import SolidTumorPanel from './pages/SolidTumorPanel';
 import CytokineProfiling from './pages/CytokineProfiling';
 import TissueImagingAnalysis from './pages/TissueImagingAnalysis';
 import AboutUs from './pages/AboutUs';
@@ -74,6 +75,7 @@ function App() {
           <Route path="/whole-exome-sequencing" element={<WholeExomeSequencing />} />
           <Route path="/whole-plasmid-sequencing" element={<WholePlasmidSequencing />} />
           <Route path="/visium-hd" element={<VisiumHD />} />
+          <Route path="/solid-tumor-panel" element={<SolidTumorPanel />} />
           <Route path="/cytokine-profiling" element={<CytokineProfiling />} />
           <Route path="/tissue-imaging-analysis" element={<TissueImagingAnalysis />} />
           <Route path="/about" element={<AboutUs />} />

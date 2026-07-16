@@ -78,8 +78,12 @@ const Hero = () => {
         >
           <source src={bgVideo} type="video/mp4" />
         </video>
-        {/* Subtle Dark Overlay for contrast (25% opacity) */}
-        <div className="absolute inset-0 bg-slate-950/25 mix-blend-multiply"></div>
+        {/* Light wash: lifts the video instead of darkening it. */}
+        <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-primary-100/10 to-teal-100/20"></div>
+        {/* Soft centre scrim: the white hero text needs a darker backdrop than a light
+            wash can give, so contrast is bought only where the text actually sits and
+            the frame edges stay vibrant. */}
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_62%_at_50%_46%,rgba(15,23,42,0.52)_0%,rgba(15,23,42,0.37)_55%,rgba(15,23,42,0.08)_81%,transparent_100%)]"></div>
       </div>
 
       <div className="container-custom relative z-10 w-full max-w-5xl mx-auto px-4 lg:px-8">
@@ -96,10 +100,10 @@ const Hero = () => {
                 <span className="inline-block px-4 py-1.5 rounded-full bg-gradient-to-r from-primary-500/20 to-teal-400/20 border border-teal-400/30 text-teal-300 text-sm font-bold tracking-wider uppercase mb-6 shadow-sm shadow-teal-500/5">
                   {slides[currentSlide].tagline}
                 </span>
-                <h1 className="text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black text-white leading-none tracking-tight mb-6">
+                <h1 className="text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black text-white leading-none tracking-tight mb-6 drop-shadow-[0_2px_12px_rgba(15,23,42,0.55)]">
                   CNC <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary-400 via-teal-300 to-primary-300" style={{ WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Path Lab</span>
                 </h1>
-                <p className="text-lg md:text-xl xl:text-2xl text-slate-200 mb-8 leading-relaxed max-w-xl font-medium">
+                <p className="text-lg md:text-xl xl:text-2xl text-slate-200 mb-8 leading-relaxed max-w-xl font-medium [text-shadow:0_1px_8px_rgba(15,23,42,0.7)]">
                   {slides[currentSlide].subtitle}
                 </p>
                 <div className="flex gap-4">
@@ -147,18 +151,12 @@ const Hero = () => {
               </p>
               {/* Contact details */}
               <div className="flex flex-col sm:flex-row flex-wrap justify-center lg:justify-start gap-4 md:gap-6 text-sm text-slate-300 mt-4 font-medium">
-                <div className="flex items-center justify-center lg:justify-start gap-2">
-                  <Phone className="w-4 h-4 text-teal-400 shrink-0" />
-                  <span>8588029096</span>
-                </div>
+                
                 <div className="flex items-center justify-center lg:justify-start gap-2">
                   <Mail className="w-4 h-4 text-teal-400 shrink-0" />
                   <span>info@cncpathlab.com</span>
                 </div>
-                <div className="flex items-center justify-center lg:justify-start gap-2">
-                  <MapPin className="w-4 h-4 text-teal-400 shrink-0" />
-                  <span>2E/21, Block E 2, Jhandewalan Extension, Karol Bagh, New Delhi, Delhi 110055</span>
-                </div>
+                
               </div>
             </div>
 

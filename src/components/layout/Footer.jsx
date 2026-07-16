@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Beaker, Mail, Phone, MapPin } from 'lucide-react';
 import { FaFacebook, FaXTwitter, FaLinkedin } from 'react-icons/fa6';
-import labLogo from '../../assets/logo.webp';
+import labLogo from '../../assets/logo.png';
 
 const Footer = () => {
   const navigate = useNavigate();
@@ -37,7 +37,7 @@ const Footer = () => {
               src={labLogo}
               alt="CNC Path Lab Logo"
               onClick={(e) => handleNavigate(e, '/')}
-              className="h-14 md:h-16 lg:h-20 w-auto object-contain mb-5 cursor-pointer"
+              className="h-14 min-[640px]:max-[768px]:h-[72px] min-[768px]:max-[800px]:h-[48px] min-[800px]:max-[1024px]:h-[65px] min-[1024px]:max-[1536px]:h-[88px] min-[1536px]:h-[100px] w-auto object-contain mb-5 cursor-pointer"
             />
             <div
               className="flex items-center gap-2 mb-6 cursor-pointer"
