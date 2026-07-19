@@ -147,7 +147,7 @@ const Hero = () => {
             <div className="flex-1 text-center lg:text-left">
               <h3 className="text-xl md:text-2xl font-bold text-white mb-2">Connect With Our Specialists</h3>
               <p className="text-sm md:text-base text-slate-300">
-                Ready to accelerate your specialty clinical studies? Speak with our diagnostic path lab experts.
+                Ready to accelerate your specialty clinical studies and diagnostic programs? Our team of experienced pathologists, molecular scientists, and laboratory specialists is here to support you at every stage. From advanced diagnostic testing and biomarker analysis to genomic profiling and customized laboratory solutions, we provide accurate, timely, and reliable results tailored to your research and clinical needs.
               </p>
               {/* Contact details */}
               <div className="flex flex-col sm:flex-row flex-wrap justify-center lg:justify-start gap-4 md:gap-6 text-sm text-slate-300 mt-4 font-medium">
