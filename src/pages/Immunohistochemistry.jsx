@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { motion, useMotionValue, useSpring, useTransform, useMotionTemplate } from 'framer-motion';
+import { motion, useMotionValue, useSpring, useTransform, useMotionTemplate, useScroll } from 'framer-motion';
 import {
     Microscope,
     ScanLine,
@@ -31,7 +31,7 @@ import SectionHeader from '../components/ui/SectionHeader';
 import CTASection from '../sections/CTASection';
 import WhyChooseSection from '../components/ui/WhyChooseSection';
 import bgVideo from '../assets/bgvideo.mp4';
-import labImg from '../assets/labimage.webp';
+import labImg from '../assets/ihc.webp';
 import bioimageImg from '../assets/bioimage.webp';
 import diagnosticsImg from '../assets/diagnostics.jpg';
 
@@ -232,6 +232,220 @@ const whyChooseUs = [
     { title: 'End-to-End Biomarker Solutions', description: 'A single partner from assay development through digital analysis and expert interpretation.', icon: Network },
 ];
 
+// Premium interactive biotech showcase for the IHC image: mouse-parallax tilt,
+// floating motion, pulsing multi-color glow, animated gradient border, frosted
+// glass card, particles, low-opacity scientific background, and a scanning beam.
+// Purely a visual wrapper around the existing ihc.webp — no content/layout change.
+const IhcShowcaseImage = ({ src, alt }) => {
+    const tiltRef = useRef(null);
+    const showcaseRef = useRef(null);
+
+    // Advanced scroll parallax — the image tracks scroll at ~0.75x with a gentle
+    // zoom (1.0 → 1.08), giving an Apple/Adobe-style depth shift. Springed so the
+    // motion stays buttery, and driven by translate3d/scale for GPU acceleration.
+    const { scrollYProgress } = useScroll({ target: showcaseRef, offset: ['start end', 'end start'] });
+    const parallaxY = useSpring(useTransform(scrollYProgress, [0, 1], [56, -56]), { stiffness: 90, damping: 22, restDelta: 0.001 });
+    const parallaxScale = useSpring(useTransform(scrollYProgress, [0, 0.5, 1], [1, 1.08, 1.03]), { stiffness: 90, damping: 22, restDelta: 0.001 });
+
+    // Normalized cursor position (0–1) across the card, springed for smooth motion.
+    const px = useMotionValue(0.5);
+    const py = useMotionValue(0.5);
+    const rotateX = useSpring(useTransform(py, [0, 1], [6, -6]), { stiffness: 150, damping: 18 });
+    const rotateY = useSpring(useTransform(px, [0, 1], [-6, 6]), { stiffness: 150, damping: 18 });
+
+    const handleMove = (e) => {
+        const rect = tiltRef.current?.getBoundingClientRect();
+        if (!rect) return;
+        px.set((e.clientX - rect.left) / rect.width);
+        py.set((e.clientY - rect.top) / rect.height);
+    };
+    const handleLeave = () => {
+        px.set(0.5);
+        py.set(0.5);
+    };
+
+    // Elegant floating particles — fewer render on small screens for performance.
+    const particles = [
+        { top: '8%', left: '12%', size: 7, dx: '10px', dy: '-22px', dur: 7, delay: 0, hideSm: false },
+        { top: '18%', left: '88%', size: 5, dx: '-12px', dy: '-18px', dur: 8, delay: 1.2, hideSm: false },
+        { top: '72%', left: '6%', size: 6, dx: '14px', dy: '-16px', dur: 9, delay: 0.6, hideSm: false },
+        { top: '86%', left: '80%', size: 5, dx: '-10px', dy: '-24px', dur: 7.5, delay: 2, hideSm: false },
+        { top: '40%', left: '94%', size: 4, dx: '-8px', dy: '-20px', dur: 8.5, delay: 1.6, hideSm: true },
+        { top: '55%', left: '2%', size: 4, dx: '10px', dy: '-18px', dur: 9.5, delay: 0.9, hideSm: true },
+        { top: '4%', left: '55%', size: 5, dx: '6px', dy: '-22px', dur: 8, delay: 2.4, hideSm: true },
+        { top: '92%', left: '40%', size: 6, dx: '-6px', dy: '-20px', dur: 7, delay: 1.4, hideSm: true },
+    ];
+
+    return (
+        <div ref={showcaseRef} className="ihc-showcase relative" style={{ perspective: '1200px' }}>
+            <style>{`
+                @property --ihc-img-angle { syntax: '<angle>'; initial-value: 0deg; inherits: false; }
+                @keyframes ihc-img-border-spin { to { --ihc-img-angle: 360deg; } }
+                /* Cinematic float: up/down + gentle left-right drift + very subtle rotation */
+                @keyframes ihc-img-float {
+                    0%, 100% { transform: translate3d(0, 0, 0) rotate(-1.2deg); }
+                    25% { transform: translate3d(6px, -6px, 0) rotate(0.4deg); }
+                    50% { transform: translate3d(0, -10px, 0) rotate(1.4deg); }
+                    75% { transform: translate3d(-6px, -6px, 0) rotate(0.4deg); }
+                }
+                @keyframes ihc-img-glow-pulse { 0%, 100% { opacity: .4; transform: scale(1); } 50% { opacity: .75; transform: scale(1.05); } }
+                @keyframes ihc-img-scan { 0% { transform: translateY(-130%); opacity: 0; } 12% { opacity: .85; } 60% { opacity: .85; } 80%, 100% { transform: translateY(130%); opacity: 0; } }
+                @keyframes ihc-img-particle { 0%, 100% { transform: translate(0, 0); opacity: .2; } 50% { transform: translate(var(--dx, 8px), var(--dy, -20px)); opacity: .7; } }
+                @keyframes ihc-img-ring-spin { to { transform: rotate(360deg); } }
+                @keyframes ihc-img-ring-spin-rev { to { transform: rotate(-360deg); } }
+                /* Energy rings gently expand & contract while emitting a faint blue glow */
+                @keyframes ihc-img-ring-breathe { 0%, 100% { transform: scale(0.94); opacity: .22; } 50% { transform: scale(1.08); opacity: .5; } }
+                @keyframes ihc-img-sweep-move { 0% { transform: translateX(-160%) skewX(-18deg); opacity: 0; } 22% { opacity: .55; } 100% { transform: translateX(190%) skewX(-18deg); opacity: 0; } }
+                /* Dynamic biotech color shift — subtle hue rotation (±12deg) + gentle saturation/brightness */
+                @keyframes ihc-img-tint {
+                    0%, 100% { filter: hue-rotate(0deg) saturate(1) brightness(1); }
+                    20% { filter: hue-rotate(-8deg) saturate(1.06) brightness(1.02); }
+                    40% { filter: hue-rotate(6deg) saturate(1.09) brightness(1.03); }
+                    60% { filter: hue-rotate(12deg) saturate(1.1) brightness(1.02); }
+                    80% { filter: hue-rotate(4deg) saturate(1.06) brightness(1.02); }
+                }
+                /* Slowly drifting cyan→aqua→sky→teal gradient wash over the image */
+                @keyframes ihc-img-tint-overlay { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+                /* Outer glow hue shift, kept on the same 15s cadence as the tint for sync */
+                @keyframes ihc-img-glow-hue { 0%, 100% { filter: hue-rotate(0deg); } 20% { filter: hue-rotate(-8deg); } 40% { filter: hue-rotate(6deg); } 60% { filter: hue-rotate(12deg); } 80% { filter: hue-rotate(4deg); } }
+
+                .ihc-img-border {
+                    padding: 2px;
+                    border-radius: 28px;
+                    background: conic-gradient(from var(--ihc-img-angle), #22d3ee, #38bdf8, #5eead4, #2dd4bf, #67e8f9, #22d3ee);
+                    animation: ihc-img-border-spin 9s linear infinite;
+                    transition: filter 400ms ease;
+                }
+                .group:hover .ihc-img-border { animation-duration: 3.5s; }
+                .ihc-img-float { animation: ihc-img-float 9s ease-in-out infinite; }
+                .ihc-img-ring-a { animation: ihc-img-ring-spin 34s linear infinite; }
+                .ihc-img-ring-b { animation: ihc-img-ring-spin-rev 46s linear infinite; }
+                .ihc-img-ring-breathe { animation: ihc-img-ring-breathe 7s ease-in-out infinite; }
+                .ihc-img-glass {
+                    border-radius: 26px;
+                    background: linear-gradient(160deg, rgba(255,255,255,0.55) 0%, rgba(224,247,255,0.34) 55%, rgba(204,245,240,0.3) 100%);
+                    backdrop-filter: blur(10px);
+                    -webkit-backdrop-filter: blur(10px);
+                    border: 1px solid rgba(255,255,255,0.5);
+                    box-shadow: 0 20px 55px -20px rgba(13,148,136,0.4);
+                    transition: box-shadow 400ms ease;
+                }
+                .group:hover .ihc-img-glass { box-shadow: 0 34px 80px -22px rgba(13,148,136,0.55), 0 0 40px -6px rgba(34,211,238,0.4); }
+                .ihc-img-glow { animation: ihc-img-glow-pulse 6s ease-in-out infinite; transition: opacity 400ms ease; }
+                .group:hover .ihc-img-glow { opacity: .9; }
+                .ihc-img-scan { animation: ihc-img-scan 6.5s ease-in-out infinite; }
+                .ihc-img-ring { animation: ihc-img-ring-spin 26s linear infinite; transform-origin: center; }
+                .ihc-img-particle { animation: ihc-img-particle var(--dur, 8s) ease-in-out infinite; }
+                .group:hover .ihc-img-sweep { animation: ihc-img-sweep-move .9s ease-out; }
+                .ihc-img-tint { animation: ihc-img-tint 15s ease-in-out infinite; }
+                .group:hover .ihc-img-tint { animation-play-state: paused; filter: brightness(1.1) saturate(1.12) !important; }
+                .ihc-img-tint-overlay {
+                    background: linear-gradient(115deg, rgba(34,211,238,0.55), rgba(94,234,212,0.45), rgba(56,189,248,0.55), rgba(45,212,191,0.45));
+                    background-size: 300% 300%;
+                    mix-blend-mode: soft-light;
+                    opacity: .12;
+                    animation: ihc-img-tint-overlay 16s ease-in-out infinite;
+                }
+                .group:hover .ihc-img-tint-overlay { animation-play-state: paused; opacity: .16; }
+                .ihc-img-glow-sync { animation: ihc-img-glow-hue 15s ease-in-out infinite; }
+                .group:hover .ihc-img-glow-sync { animation-play-state: paused; }
+
+                @media (prefers-reduced-motion: reduce) {
+                    .ihc-img-border, .ihc-img-float, .ihc-img-glow, .ihc-img-scan, .ihc-img-ring, .ihc-img-particle,
+                    .ihc-img-ring-a, .ihc-img-ring-b, .ihc-img-ring-breathe,
+                    .ihc-img-tint, .ihc-img-tint-overlay, .ihc-img-glow-sync { animation: none !important; }
+                }
+            `}</style>
+
+            {/* Low-opacity scientific background: DNA helix, hex molecular grid, scanning rings, network lines */}
+            <svg className="pointer-events-none absolute -inset-6 w-[calc(100%+3rem)] h-[calc(100%+3rem)] opacity-[0.06] -z-10" viewBox="0 0 400 400" fill="none" aria-hidden="true">
+                <path d="M60,20 C160,70 -40,120 60,170 C160,220 -40,270 60,320 C160,370 -40,400 60,420" stroke="#0ea5e9" strokeWidth="2" />
+                <path d="M140,20 C40,70 240,120 140,170 C40,220 240,270 140,320 C40,370 240,400 140,420" stroke="#14b8a6" strokeWidth="2" />
+                {Array.from({ length: 9 }).map((_, i) => (
+                    <line key={i} x1="60" y1={20 + i * 44} x2="140" y2={20 + i * 44} stroke="#22d3ee" strokeWidth="1.5" />
+                ))}
+                <g stroke="#38bdf8" strokeWidth="1.5">
+                    <polygon points="300,40 330,58 330,94 300,112 270,94 270,58" fill="none" />
+                    <polygon points="352,70 382,88 382,124 352,142 322,124 322,88" fill="none" />
+                    <polygon points="300,124 330,142 330,178 300,196 270,178 270,142" fill="none" />
+                </g>
+                <g className="ihc-img-ring" style={{ transformBox: 'fill-box' }}>
+                    <circle cx="320" cy="300" r="60" stroke="#2dd4bf" strokeWidth="1.5" fill="none" />
+                    <circle cx="320" cy="300" r="40" stroke="#22d3ee" strokeWidth="1" fill="none" strokeDasharray="6 10" />
+                </g>
+                <g stroke="#5eead4" strokeWidth="1.2">
+                    <line x1="40" y1="360" x2="120" y2="330" />
+                    <line x1="120" y1="330" x2="180" y2="380" />
+                    <circle cx="40" cy="360" r="3" fill="#5eead4" stroke="none" />
+                    <circle cx="120" cy="330" r="3" fill="#5eead4" stroke="none" />
+                    <circle cx="180" cy="380" r="3" fill="#5eead4" stroke="none" />
+                </g>
+            </svg>
+
+            {/* Floating particles (fewer on small screens) */}
+            {particles.map((p, i) => (
+                <span
+                    key={i}
+                    className={`ihc-img-particle pointer-events-none absolute rounded-full bg-cyan-300/60 blur-[1px] ${p.hideSm ? 'hidden md:block' : ''}`}
+                    style={{ top: p.top, left: p.left, width: p.size, height: p.size, '--dx': p.dx, '--dy': p.dy, '--dur': `${p.dur}s`, animationDelay: `${p.delay}s` }}
+                    aria-hidden="true"
+                />
+            ))}
+
+            {/* Animated energy rings — molecular-scanner feel: rotate + gently breathe with a faint blue glow */}
+            <div className="pointer-events-none absolute inset-0 -z-10 grid place-items-center" aria-hidden="true">
+                <div className="ihc-img-ring-breathe" style={{ gridArea: '1 / 1' }}>
+                    <div className="ihc-img-ring-a aspect-square rounded-full border border-cyan-300/40" style={{ width: '38rem', maxWidth: '92vw', boxShadow: '0 0 60px rgba(34,211,238,0.15), inset 0 0 40px rgba(56,189,248,0.1)' }} />
+                </div>
+                <div className="ihc-img-ring-b aspect-square rounded-full border border-dashed border-teal-300/30" style={{ gridArea: '1 / 1', width: '30rem', maxWidth: '80vw', boxShadow: '0 0 40px rgba(45,212,191,0.12)' }} />
+            </div>
+
+            {/* Tilt + hover group */}
+            <motion.div
+                ref={tiltRef}
+                onMouseMove={handleMove}
+                onMouseLeave={handleLeave}
+                style={{ rotateX, rotateY, transformStyle: 'preserve-3d' }}
+                className="group relative"
+            >
+                {/* Pulsing multi-color glow layers (cyan / sky / aqua / sea green), hue-synced to the image tint */}
+                <div className="ihc-img-glow-sync pointer-events-none absolute inset-0" aria-hidden="true">
+                    <div className="ihc-img-glow pointer-events-none absolute -inset-5 rounded-[36px] bg-cyan-300/40 blur-2xl" style={{ animationDelay: '0s' }} />
+                    <div className="ihc-img-glow pointer-events-none absolute -inset-6 rounded-[38px] bg-sky-300/35 blur-3xl" style={{ animationDelay: '1.5s' }} />
+                    <div className="ihc-img-glow pointer-events-none absolute -inset-4 rounded-[34px] bg-teal-300/35 blur-2xl hidden sm:block" style={{ animationDelay: '2.4s' }} />
+                    <div className="ihc-img-glow pointer-events-none absolute -inset-6 rounded-[38px] bg-emerald-300/30 blur-3xl hidden sm:block" style={{ animationDelay: '3.3s' }} />
+                </div>
+
+                {/* Scroll parallax layer — slower-than-page vertical shift + subtle zoom (GPU transforms) */}
+                <motion.div style={{ y: parallaxY, scale: parallaxScale }} className="will-change-transform">
+                    {/* Animated gradient border */}
+                    <div className="ihc-img-border relative">
+                        {/* Frosted glass card — image floats inside */}
+                        <div className="ihc-img-glass relative overflow-hidden p-2.5">
+                            <div className="ihc-img-float rounded-[20px] overflow-hidden relative">
+                                <img
+                                    src={src}
+                                    alt={alt}
+                                    loading="lazy"
+                                    className="ihc-img-tint w-full h-auto md:h-[560px] object-cover rounded-[20px] transition-transform duration-[400ms] ease-out group-hover:scale-[1.05]"
+                                />
+                                {/* Existing tonal overlay preserved */}
+                                <div className="absolute inset-0 bg-gradient-to-tr from-primary-900/20 via-transparent to-transparent opacity-60 mix-blend-multiply pointer-events-none" />
+                                {/* Animated biotech gradient wash (soft-light) — keeps image details visible */}
+                                <div className="ihc-img-tint-overlay pointer-events-none absolute inset-0" aria-hidden="true" />
+                                {/* Cyan scan beam sweeping vertically */}
+                                <div className="ihc-img-scan pointer-events-none absolute inset-x-0 top-0 h-1/3" style={{ background: 'linear-gradient(180deg, transparent, rgba(34,211,238,0.28), rgba(94,234,212,0.18), transparent)' }} aria-hidden="true" />
+                                {/* Light reflection sweep on hover */}
+                                <div className="ihc-img-sweep pointer-events-none absolute inset-y-0 -left-1/3 w-1/3 opacity-0" style={{ background: 'linear-gradient(100deg, transparent, rgba(255,255,255,0.35), transparent)' }} aria-hidden="true" />
+                            </div>
+                        </div>
+                    </div>
+                </motion.div>
+            </motion.div>
+        </div>
+    );
+};
+
 const Immunohistochemistry = () => {
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -327,22 +541,16 @@ const Immunohistochemistry = () => {
                         </motion.div>
 
                         <motion.div
-                            initial={{ opacity: 0, x: 30 }}
-                            whileInView={{ opacity: 1, x: 0 }}
+                            initial={{ opacity: 0, y: 40, scale: 0.95, filter: 'blur(12px)' }}
+                            whileInView={{ opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' }}
                             viewport={{ once: true }}
+                            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
                             className="flex-1 w-full relative"
                         >
-                            <div className="relative rounded-3xl overflow-hidden shadow-2xl border border-slate-200 group">
-                                <img
-                                    src={labImg}
-                                    alt="Immunohistochemistry laboratory staining and analysis"
-                                    loading="lazy"
-                                    className="w-full h-auto md:h-[600px] object-cover transition-transform duration-700 group-hover:scale-105"
-                                />
-                                <div className="absolute inset-0 bg-gradient-to-tr from-primary-900/20 via-transparent to-transparent opacity-60 mix-blend-multiply pointer-events-none" />
-                            </div>
-                            <div className="absolute -top-6 -right-6 w-32 h-32 bg-teal-100 rounded-full blur-2xl opacity-50 -z-10 pointer-events-none" />
-                            <div className="absolute -bottom-8 -left-8 w-40 h-40 bg-primary-100 rounded-full blur-3xl opacity-50 -z-10 pointer-events-none" />
+                            <IhcShowcaseImage
+                                src={labImg}
+                                alt="Immunohistochemistry laboratory staining and analysis"
+                            />
                         </motion.div>
                     </div>
                 </div>

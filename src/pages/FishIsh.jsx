@@ -41,7 +41,7 @@ import SectionHeader from '../components/ui/SectionHeader';
 import CTASection from '../sections/CTASection';
 import WhyChooseSection from '../components/ui/WhyChooseSection';
 import bgVideo from '../assets/bgvideo.mp4';
-import bioimageImg from '../assets/bioimage.webp';
+import fishImage from '../assets/fish.webp';
 import diagnosticsImg from '../assets/diagnostics.jpg';
 
 // Light premium biotech palette cycled across the application cards.
@@ -422,9 +422,28 @@ const FishIsh = () => {
                 .fish-particle { animation: fish-particle 9s ease-in-out infinite; }
                 .fish-dash { stroke-dasharray: 7 11; animation: fish-dash 22s linear infinite; }
 
+                /* Selective blue/cyan FISH-signal enhancement (SVG channel boost) + smooth hover */
+                .fish-blue-cells { filter: url(#fish-blue-boost); transition: transform 400ms ease, filter 400ms ease; }
+                .group:hover .fish-blue-cells { filter: url(#fish-blue-boost) brightness(1.07) contrast(1.05) saturate(1.08); }
+
+                /* Soft fluorescence halo over the blue signals (screen blend, gently pulsing) */
+                @keyframes fish-cell-glow-pulse { 0%, 100% { opacity: .1; } 50% { opacity: .22; } }
+                .fish-cell-glow { mix-blend-mode: screen; opacity: .12; animation: fish-cell-glow-pulse 5.5s ease-in-out infinite; }
+                .group:hover .fish-cell-glow { animation-duration: 3.2s; }
+
+                /* Slow blue microscopy scan beam */
+                @keyframes fish-cell-scan { 0% { transform: translateY(-120%); opacity: 0; } 12% { opacity: .5; } 60% { opacity: .5; } 82%, 100% { transform: translateY(120%); opacity: 0; } }
+                .fish-cell-scan { animation: fish-cell-scan 7s ease-in-out infinite; }
+                .group:hover .fish-cell-scan { animation-duration: 3.4s; }
+
+                /* Reflective scanning light on hover */
+                @keyframes fish-cell-sweep { 0% { transform: translateX(-160%) skewX(-18deg); opacity: 0; } 22% { opacity: .5; } 100% { transform: translateX(190%) skewX(-18deg); opacity: 0; } }
+                .group:hover .fish-cell-sweep { animation: fish-cell-sweep .9s ease-out; }
+
                 @media (prefers-reduced-motion: reduce) {
                     .fish-hero-float, .fish-img-float, .fish-img-breathe, .fish-cap-border, .fish-shine::before,
-                    .fish-float, .fish-spin-slow, .fish-breathe, .fish-drift, .fish-hexgrid, .fish-particle, .fish-dash {
+                    .fish-float, .fish-spin-slow, .fish-breathe, .fish-drift, .fish-hexgrid, .fish-particle, .fish-dash,
+                    .fish-cell-glow, .fish-cell-scan, .fish-cell-sweep {
                         animation: none !important;
                     }
                 }
@@ -540,18 +559,43 @@ const FishIsh = () => {
                                 ref={overviewImgRef}
                                 className="relative rounded-3xl overflow-hidden border border-slate-200 shadow-2xl transition-[transform,box-shadow,border-color] duration-[400ms] ease-out group-hover:-translate-y-1.5 group-hover:border-teal-300/70 group-hover:shadow-[0_30px_70px_-15px_rgba(13,148,136,0.5),0_0_40px_-8px_rgba(34,211,238,0.4)]"
                             >
+                                {/* Selective blue/cyan channel boost — highlights FISH signals without editing the file */}
+                                <svg width="0" height="0" className="absolute" aria-hidden="true" focusable="false">
+                                    <filter id="fish-blue-boost" x="-5%" y="-5%" width="110%" height="110%" colorInterpolationFilters="sRGB">
+                                        <feColorMatrix
+                                            type="matrix"
+                                            values="1.02 0    0    0 0
+                                                    0    1.0  0    0 0
+                                                    0    0.06 1.18 0 0
+                                                    0    0    0    1 0"
+                                        />
+                                        <feColorMatrix type="saturate" values="1.14" />
+                                    </filter>
+                                </svg>
+
                                 <motion.div style={{ y: overviewImgY, scale: overviewImgScale }} className="will-change-transform">
                                     <div className="fish-img-float">
                                         <img
-                                            src={bioimageImg}
+                                            src={fishImage}
                                             alt="Fluorescence in situ hybridization signals in tissue"
                                             loading="lazy"
-                                            className="w-full h-auto md:h-[560px] object-cover transition-transform duration-[400ms] ease-out group-hover:scale-[1.05]"
+                                            className="fish-blue-cells w-full h-auto md:h-[560px] object-cover ease-out group-hover:scale-[1.05]"
                                         />
                                     </div>
                                 </motion.div>
                                 <div className="absolute inset-0 bg-gradient-to-tr from-primary-900/20 via-transparent to-transparent opacity-60 mix-blend-multiply pointer-events-none" />
                                 <div className="pointer-events-none absolute inset-x-0 top-0 h-1/4 bg-gradient-to-b from-white/25 to-transparent" />
+
+                                {/* Fluorescence halo over blue signals (screen blend) — extra layer only on larger screens */}
+                                <div className="fish-cell-glow pointer-events-none absolute inset-0" style={{ background: 'radial-gradient(58% 55% at 50% 46%, rgba(34,211,238,0.5), rgba(56,189,248,0.24) 46%, transparent 72%)' }} aria-hidden="true" />
+                                <div className="fish-cell-glow pointer-events-none absolute inset-0 hidden sm:block" style={{ background: 'radial-gradient(46% 42% at 42% 38%, rgba(94,234,212,0.45), transparent 68%)', animationDelay: '1.6s' }} aria-hidden="true" />
+
+                                {/* Slow blue microscopy scan beam */}
+                                <div className="fish-cell-scan pointer-events-none absolute inset-x-0 top-0 h-1/3" style={{ background: 'linear-gradient(180deg, transparent, rgba(56,189,248,0.22), rgba(34,211,238,0.14), transparent)' }} aria-hidden="true" />
+
+                                {/* Reflective scanning light on hover */}
+                                <div className="fish-cell-sweep pointer-events-none absolute inset-y-0 -left-1/3 w-1/3 opacity-0" style={{ background: 'linear-gradient(100deg, transparent, rgba(255,255,255,0.3), transparent)' }} aria-hidden="true" />
+
                                 <div className="pointer-events-none absolute inset-0 rounded-3xl ring-0 ring-inset ring-teal-400/0 group-hover:ring-2 group-hover:ring-teal-400/60 transition-all duration-[400ms]" />
                             </div>
 

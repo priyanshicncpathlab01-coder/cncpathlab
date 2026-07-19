@@ -5,10 +5,10 @@ import Button from '../components/ui/Button';
 import bioImg from '../assets/bioimage.webp';
 
 const stats = [
-  { value: '500K+', label: 'Blood & Fluid Samples' },
-  { value: '200K+', label: 'Tissue Blocks' },
-  { value: '150+', label: 'Validated Assays' },
-  { value: '100%', label: 'GCLP Compliant' },
+  { value: '500K+', label: 'Blood & Fluid Samples Testing' },
+  { value: '200K+', label: 'Tissue Blocks Testing' },
+  { value: '150+', label: 'Validated Assays Testing' },
+  { value: '100%', label: 'GCLP Compliant Testing' },
 ];
 
 const specimens = [
@@ -53,7 +53,7 @@ const BiospecimenRepository = () => {
                 transition={{ delay: 0.07 }}
                 className="text-4xl md:text-5xl font-bold text-white leading-tight mb-6"
               >
-                Enabling Research with an <span className="text-teal-300">Expansive Repository</span>
+                Enabling Research with an <span className="text-teal-300">Expansive Testing</span>
               </motion.h2>
               <motion.p
                 initial={{ opacity: 0, y: 16 }}
@@ -78,7 +78,7 @@ const BiospecimenRepository = () => {
                   size="lg"
                   onClick={() => window.dispatchEvent(new CustomEvent('openContactModal'))}
                 >
-                  Request Biospecimens
+                  contact us
                 </Button>
                 <Button
                   size="lg"
@@ -112,55 +112,7 @@ const BiospecimenRepository = () => {
       </section>
 
       {/* ── Specimen types grid ── */}
-      <section className="section-padding bg-slate-50">
-        <div className="container-custom">
-          <div className="text-center mb-12">
-            <motion.h3
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="text-3xl md:text-4xl font-bold text-slate-900 mb-4"
-            >
-              Specimen Types Available
-            </motion.h3>
-            <motion.p
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.08 }}
-              className="text-slate-600 max-w-2xl mx-auto"
-            >
-              Comprehensive biospecimen sourcing across therapeutic areas and clinical indications.
-            </motion.p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {specimens.map((item, index) => {
-              const Icon = item.icon;
-              return (
-                <motion.div
-                  key={item.name}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.06 }}
-                  className="flex items-center gap-5 p-6 rounded-2xl bg-white border border-slate-200 hover:border-primary-300 hover:shadow-lg hover:shadow-primary-500/10 transition-all duration-300 group cursor-pointer"
-                >
-                  <div className="w-14 h-14 rounded-xl bg-slate-50 text-slate-400 group-hover:bg-primary-600 group-hover:text-white flex items-center justify-center shrink-0 transition-all duration-300">
-                    <Icon className="w-6 h-6" />
-                  </div>
-                  <div>
-                    <h4 className="text-lg font-bold text-slate-900 mb-1 group-hover:text-primary-700 transition-colors">
-                      {item.name}
-                    </h4>
-                    <p className="text-primary-600 font-semibold text-sm">{item.count}</p>
-                  </div>
-                </motion.div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
+      
     </>
   );
 };

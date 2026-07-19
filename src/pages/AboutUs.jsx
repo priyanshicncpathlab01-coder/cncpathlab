@@ -1,5 +1,5 @@
-import { useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { useEffect, useRef, useState } from 'react';
+import { motion, AnimatePresence, useScroll, useTransform, useSpring } from 'framer-motion';
 import {
     Microscope,
     Dna,
@@ -31,8 +31,95 @@ import {
 import SectionHeader from '../components/ui/SectionHeader';
 import CTASection from '../sections/CTASection';
 import bgVideo from '../assets/bgvideo.mp4';
-import labImage from '../assets/labimage.webp';
+import office1 from '../assets/office1.webp';
+import office2 from '../assets/office2.webp';
 import genomicsImg from '../assets/genomics.webp';
+
+const galleryImages = [office1, office2];
+
+const OfficeGallery = () => {
+    const [index, setIndex] = useState(0);
+    const containerRef = useRef(null);
+
+    // Smooth parallax scrolling effect
+    const { scrollYProgress } = useScroll({
+        target: containerRef,
+        offset: ['start end', 'end start'],
+    });
+    
+    // Add useSpring for butter-smooth parallax with no jitter
+    const smoothProgress = useSpring(scrollYProgress, { damping: 25, stiffness: 120, mass: 0.5 });
+    const parallaxY = useTransform(smoothProgress, [0, 1], ['-15%', '15%']);
+
+    useEffect(() => {
+        const timer = setInterval(() => {
+            setIndex((prev) => (prev + 1) % galleryImages.length);
+        }, 5000);
+        return () => clearInterval(timer);
+    }, []);
+
+    return (
+        <motion.div
+            initial={{ opacity: 0, x: 30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            className="flex-1 w-full relative group"
+        >
+            {/* Creative blue glow effect */}
+            <div className="absolute -inset-4 rounded-[2.5rem] bg-gradient-to-tr from-primary-500/40 via-teal-400/30 to-sky-400/40 blur-3xl opacity-60 group-hover:opacity-100 group-hover:from-primary-400/50 group-hover:via-teal-300/40 group-hover:to-sky-300/50 transition-all duration-700 -z-10 pointer-events-none" />
+
+            {/* Subtle glassmorphism styling, soft shadow, glowing border */}
+            <div className="relative rounded-3xl overflow-hidden bg-white/20 backdrop-blur-md border border-white/40 shadow-2xl transition-all duration-700 ease-out group-hover:border-primary-400/70 group-hover:shadow-[0_20px_60px_rgba(14,165,233,0.35)] group-hover:ring-1 group-hover:ring-primary-300/50">
+                
+                <div ref={containerRef} className="relative w-full h-[320px] sm:h-[420px] lg:h-[520px] overflow-hidden rounded-3xl">
+                    {/* Parallax Layer */}
+                    <motion.div style={{ y: parallaxY }} className="absolute -inset-y-[20%] inset-x-0 will-change-transform">
+                        {/* Gentle hover zoom */}
+                        <div className="absolute inset-0 transition-transform duration-1000 ease-out group-hover:scale-[1.06]">
+                            <AnimatePresence initial={false}>
+                                <motion.img
+                                    key={index}
+                                    src={galleryImages[index]}
+                                    alt="CNC Path Lab facility"
+                                    loading="lazy"
+                                    initial={{ opacity: 0, scale: 1.05 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    exit={{ opacity: 0, scale: 0.95 }}
+                                    transition={{ duration: 1.2, ease: 'easeInOut' }}
+                                    className="absolute inset-0 w-full h-full object-cover will-change-transform"
+                                />
+                            </AnimatePresence>
+                        </div>
+                    </motion.div>
+
+                    {/* Gradient Overlay for better contrast of indicators */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-900/50 via-transparent to-transparent opacity-80 mix-blend-multiply pointer-events-none" />
+                </div>
+
+                {/* Modern Slide Indicators */}
+                <div className="absolute bottom-5 left-1/2 -translate-x-1/2 z-10 flex items-center gap-3">
+                    {galleryImages.map((_, i) => (
+                        <button
+                            key={i}
+                            type="button"
+                            onClick={() => setIndex(i)}
+                            aria-label={`Go to slide ${i + 1}`}
+                            className={`h-2 rounded-full transition-all duration-500 ${
+                                i === index
+                                    ? 'w-8 bg-white shadow-[0_0_15px_rgba(255,255,255,0.9)]'
+                                    : 'w-2.5 bg-white/50 hover:bg-white/80'
+                            }`}
+                        />
+                    ))}
+                </div>
+            </div>
+
+            {/* Additional ambient blobs */}
+            <div className="absolute -top-10 -right-10 w-40 h-40 bg-teal-300/30 rounded-full blur-3xl opacity-50 -z-10 pointer-events-none" />
+            <div className="absolute -bottom-10 -left-10 w-48 h-48 bg-primary-400/30 rounded-full blur-3xl opacity-50 -z-10 pointer-events-none" />
+        </motion.div>
+    );
+};
 
 const technologyPlatforms = [
     { title: 'Immunohistochemistry (IHC)', icon: Microscope },
@@ -180,24 +267,7 @@ const AboutUs = () => {
                             </p>
                         </motion.div>
 
-                        <motion.div
-                            initial={{ opacity: 0, x: 30 }}
-                            whileInView={{ opacity: 1, x: 0 }}
-                            viewport={{ once: true }}
-                            className="flex-1 w-full relative"
-                        >
-                            <div className="relative rounded-3xl overflow-hidden shadow-2xl border border-slate-200 group">
-                                <img
-                                    src={labImage}
-                                    alt="CNC Path Lab scientific team at work"
-                                    loading="lazy"
-                                    className="w-full h-auto md:h-[520px] object-cover transition-transform duration-700 group-hover:scale-105"
-                                />
-                                <div className="absolute inset-0 bg-gradient-to-tr from-primary-900/20 via-transparent to-transparent opacity-60 mix-blend-multiply pointer-events-none" />
-                            </div>
-                            <div className="absolute -top-6 -right-6 w-32 h-32 bg-teal-100 rounded-full blur-2xl opacity-50 -z-10 pointer-events-none" />
-                            <div className="absolute -bottom-8 -left-8 w-40 h-40 bg-primary-100 rounded-full blur-3xl opacity-50 -z-10 pointer-events-none" />
-                        </motion.div>
+                        <OfficeGallery />
                     </div>
                 </div>
             </section>

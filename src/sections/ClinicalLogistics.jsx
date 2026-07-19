@@ -10,7 +10,7 @@ const features = [
     desc: 'Custom collection kit design, assembly, and worldwide distribution for multinational studies.',
   },
   {
-    title: 'Cold Chain Logistics',
+    title: 'Cold Chain Testing',
     icon: Truck,
     desc: 'Temperature-controlled transport ensuring integrity of sensitive biological samples worldwide.',
   },
@@ -49,7 +49,7 @@ const ClinicalLogistics = () => {
               transition={{ delay: 0.07 }}
               className="text-4xl md:text-5xl font-bold text-slate-900 leading-tight mb-6"
             >
-              Clinical Logistics for <br />
+              Clinical Testing for <br />
               <span className="text-primary-600">Biomarker Trials</span>
             </motion.h2>
             <motion.p
@@ -116,7 +116,9 @@ const ClinicalLogistics = () => {
             >
               <ShieldCheck className="w-6 h-6 text-teal-400 shrink-0" />
               <div>
-                <div className="font-bold text-sm">IATA & GCLP Certified</div>
+                <div className="font-bold text-sm">
+                  
+                </div>
                 <div className="text-slate-400 text-xs">Full regulatory compliance</div>
               </div>
             </motion.div>

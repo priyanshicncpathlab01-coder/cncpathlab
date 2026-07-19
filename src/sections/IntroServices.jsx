@@ -1,7 +1,7 @@
 import { useRef, useEffect, useLayoutEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion, useMotionValue, useTransform, useAnimationFrame, wrap } from 'framer-motion';
-import { Layers, Microscope, Dna, Search, Activity, TestTube, ArrowRight } from 'lucide-react';
+import { motion, useMotionValue, useTransform, useAnimationFrame, wrap, animate } from 'framer-motion';
+import { Layers, Microscope, Dna, Search, Activity, TestTube, ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 
 const technologyCards = [
   {
@@ -40,6 +40,35 @@ const technologyCards = [
     path: '/rt-pcr',
   },
 ];
+
+// Per-card premium blue theme. Each card gets its own light glass tint + matching
+// glow, expressed as CSS custom properties so the gradient, border, animated
+// border-line, breathing glow and icon halo all shift together in one place.
+// `tint/mid/deep` build the two-tone glass gradient; `accent` drives all glows;
+// `line`/`line2` color the rotating border-line. All kept light & harmonious.
+const cardThemes = [
+  { name: 'Ice Blue',    tint: '240,251,255', mid: '213,244,255', deep: '197,240,253', accent: '0,196,245',  line: '#7FE9FF', line2: '#22B8F0' },
+  { name: 'Sky Blue',    tint: '238,248,255', mid: '205,233,255', deep: '186,222,255', accent: '56,168,248',  line: '#8FD4FF', line2: '#3B9EFF' },
+  { name: 'Powder Blue', tint: '242,249,255', mid: '216,236,252', deep: '199,227,248', accent: '96,178,235',  line: '#A9D8FF', line2: '#5AB6F0' },
+  { name: 'Azure',       tint: '236,246,255', mid: '203,229,255', deep: '184,216,255', accent: '40,148,255',  line: '#7CC0FF', line2: '#2E86FF' },
+  { name: 'Teal Blue',   tint: '236,252,253', mid: '205,244,244', deep: '189,237,235', accent: '18,190,200',  line: '#82ECEF', line2: '#1FC2CC' },
+  { name: 'Frost Blue',  tint: '240,252,255', mid: '209,244,250', deep: '192,237,246', accent: '28,200,220',  line: '#88ECF7', line2: '#28C6DC' },
+];
+
+// Turn a theme into the CSS custom properties consumed by the card + its glow layers.
+const themeVars = (t) => ({
+  '--its-bg': `linear-gradient(160deg, rgba(${t.tint},0.66) 0%, rgba(${t.mid},0.5) 52%, rgba(${t.deep},0.44) 100%)`,
+  '--its-border': `rgba(${t.accent},0.32)`,
+  '--its-border-hover': `rgba(${t.accent},0.75)`,
+  '--its-shadow': `0 15px 40px rgba(${t.accent},0.16), 0 0 0 1px rgba(255,255,255,0.5) inset`,
+  '--its-shadow-hover': `0 28px 70px rgba(${t.accent},0.4), 0 0 28px rgba(${t.accent},0.3), 0 0 0 1px rgba(255,255,255,0.62) inset`,
+  '--its-line-a': t.line,
+  '--its-line-b': t.line2,
+  '--its-line-glow': `rgba(${t.accent},0.5)`,
+  '--its-line-glow-hover': `rgba(${t.accent},0.95)`,
+  '--its-icon-glow': `rgba(${t.accent},0.32)`,
+  '--its-divider': `linear-gradient(90deg, rgba(15,23,42,0), rgba(${t.accent},0.3), rgba(15,23,42,0))`,
+});
 
 // Extremely subtle (3-4% opacity) scientific corner motifs, cycled per card.
 const CornerDecoration = ({ variant }) => {
@@ -100,9 +129,10 @@ const CornerDecoration = ({ variant }) => {
   }
 };
 
-const TechnologyCard = ({ title, description, icon: Icon, variant, path, focusable, onActivate }) => (
+const TechnologyCard = ({ title, description, icon: Icon, variant, path, focusable, onActivate, theme, glowDelay = 0 }) => (
   <div
     className={`group relative h-full w-full ${path ? 'cursor-pointer' : ''}`}
+    style={theme}
     onClick={path ? () => onActivate?.(path) : undefined}
     role={path ? 'link' : undefined}
     tabIndex={path && focusable ? 0 : undefined}
@@ -118,19 +148,24 @@ const TechnologyCard = ({ title, description, icon: Icon, variant, path, focusab
     }
     aria-label={path ? `${title} — view service page` : undefined}
   >
+    {/* Gentle breathing outer glow, tinted to this card's blue shade */}
+    <div
+      className="its-breathe pointer-events-none absolute -inset-[6px] rounded-[32px] z-0"
+      style={{ animationDelay: `${glowDelay}s` }}
+      aria-hidden="true"
+    />
+
     {/* Animated glowing border line (scans top → right → bottom → left, infinitely) */}
     <div className="its-border-line pointer-events-none absolute inset-0 rounded-[28px] z-20" aria-hidden="true" />
 
     <div
-      className="relative h-full flex flex-col overflow-hidden px-9 py-6 transition-all duration-[350ms] ease-in-out will-change-transform
-                 rounded-[28px] border border-[rgba(255,255,255,0.22)]
-                 shadow-[0_15px_40px_rgba(0,120,255,0.12)] group-hover:shadow-[0_26px_60px_rgba(0,150,255,0.32)]
+      className="its-card relative h-full flex flex-col overflow-hidden px-9 py-6 transition-all duration-[350ms] ease-in-out will-change-transform
+                 rounded-[28px] border
                  group-hover:-translate-y-[10px] group-hover:scale-[1.02]"
       style={{
-        background:
-          'linear-gradient(160deg, rgba(255,255,255,0.08) 0%, rgba(224,244,255,0.06) 55%, rgba(0,180,255,0.05) 100%)',
-        backdropFilter: 'blur(20px)',
-        WebkitBackdropFilter: 'blur(20px)',
+        background: 'var(--its-bg)',
+        backdropFilter: 'blur(22px)',
+        WebkitBackdropFilter: 'blur(22px)',
       }}
     >
       {/* Soft light reflection in the top-left corner for the glass sheen */}
@@ -144,19 +179,22 @@ const TechnologyCard = ({ title, description, icon: Icon, variant, path, focusab
 
       <div className="relative shrink-0">
         <div
-          className="relative w-[72px] h-[72px] rounded-full flex items-center justify-center border border-[rgba(255,255,255,0.35)] shadow-[0_0_22px_rgba(0,180,255,0.35)]"
-          style={{ background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)' }}
+          className="relative w-[72px] h-[72px] rounded-full flex items-center justify-center border border-[rgba(255,255,255,0.35)]"
+          style={{ background: 'rgba(255,255,255,0.18)', boxShadow: '0 0 22px var(--its-icon-glow)', backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)' }}
         >
-          <div className="absolute inset-0 rounded-full bg-[#00AEEF]/30 blur-md opacity-40 group-hover:opacity-80 transition-opacity duration-[350ms]" />
+          <div
+            className="absolute inset-0 rounded-full blur-md opacity-40 group-hover:opacity-80 transition-opacity duration-[350ms]"
+            style={{ background: 'var(--its-icon-glow)' }}
+          />
           <Icon className="w-8 h-8 text-[#0284C7] relative z-10 transition-transform duration-[350ms] ease-in-out group-hover:rotate-[8deg] group-hover:scale-[1.12]" />
         </div>
 
         <h3 className="text-[30px] leading-[1.15] font-bold text-[#0F172A] mt-5 min-h-[70px] break-words [text-wrap:balance]">{title}</h3>
       </div>
 
-      <p className="text-[17px] leading-[1.7] text-[#475569] mt-3 line-clamp-3 flex-grow">{description}</p>
+      <p className="text-[17px] leading-[1.7] text-[#334155] mt-3 line-clamp-3 flex-grow">{description}</p>
 
-      <div className="h-px mt-5 mb-4 shrink-0" style={{ background: 'linear-gradient(90deg, rgba(15,23,42,0), rgba(0,180,255,0.25), rgba(15,23,42,0))' }} />
+      <div className="h-px mt-5 mb-4 shrink-0" style={{ background: 'var(--its-divider)' }} />
 
       <div className="shrink-0">
         <button
@@ -195,6 +233,8 @@ const TechnologyCarousel = ({ cards }) => {
   const dragStartX = useRef(0);
   const baseAtStart = useRef(0);
   const reduceMotion = useRef(false);
+  const manualScrolling = useRef(false); // true while an arrow-triggered smooth scroll is animating
+  const manualControls = useRef(null);
   const SPEED = 40; // px per second, right-to-left
   const GAP = 32; // matches gap-8 on the track
 
@@ -213,9 +253,29 @@ const TechnologyCarousel = ({ cards }) => {
   const x = useTransform(baseX, (v) => (setWidth ? `${wrap(-setWidth, 0, v)}px` : '0px'));
 
   useAnimationFrame((_, delta) => {
-    if (paused.current || dragging.current || reduceMotion.current || !setWidth) return;
+    if (paused.current || dragging.current || manualScrolling.current || reduceMotion.current || !setWidth) return;
     baseX.set(baseX.get() - (SPEED * delta) / 1000);
   });
+
+  // Manual navigation — smoothly scroll exactly one card, then hand back to auto-scroll.
+  // dir = 1 advances (right), dir = -1 goes back (left). Auto-scroll is only suspended
+  // for the duration of the tween, so it always resumes afterwards.
+  const scrollByCards = useCallback(
+    (dir) => {
+      if (!setWidth) return;
+      const step = setWidth / cards.length; // one card + its gap
+      manualControls.current?.stop();
+      manualScrolling.current = true;
+      manualControls.current = animate(baseX, baseX.get() - dir * step, {
+        duration: 0.6,
+        ease: [0.22, 1, 0.36, 1],
+        onComplete: () => {
+          manualScrolling.current = false;
+        },
+      });
+    },
+    [baseX, setWidth, cards.length]
+  );
 
   const onPointerDown = useCallback(
     (e) => {
@@ -259,34 +319,77 @@ const TechnologyCarousel = ({ cards }) => {
   const doubled = [...cards, ...cards];
 
   return (
-    <div
-      className="relative overflow-hidden select-none cursor-grab active:cursor-grabbing"
-      style={{ touchAction: 'pan-y' }}
-      onMouseEnter={() => (paused.current = true)}
-      onMouseLeave={() => (paused.current = false)}
-      onPointerDown={onPointerDown}
-      role="region"
-      aria-label="Tissue biopsy analysis technologies carousel"
-    >
-      <motion.div ref={trackRef} className="flex gap-8 w-max will-change-transform" style={{ x }}>
-        {doubled.map((card, i) => (
-          <div
-            key={`${card.title}-${i}`}
-            className="shrink-0 w-[85vw] sm:w-[56vw] lg:w-[42vw] lg:max-w-[540px] h-[400px]"
-            aria-hidden={i >= cards.length ? true : undefined}
-          >
-            <TechnologyCard
-              title={card.title}
-              description={card.description}
-              icon={card.icon}
-              variant={i % 5}
-              path={card.path}
-              focusable={i < cards.length}
-              onActivate={handleActivate}
-            />
-          </div>
-        ))}
-      </motion.div>
+    <div className="relative">
+      <div
+        className="relative overflow-hidden select-none cursor-grab active:cursor-grabbing"
+        style={{ touchAction: 'pan-y' }}
+        onMouseEnter={() => (paused.current = true)}
+        onMouseLeave={() => (paused.current = false)}
+        onPointerDown={onPointerDown}
+        role="region"
+        aria-label="Tissue biopsy analysis technologies carousel"
+      >
+        <motion.div ref={trackRef} className="flex gap-8 w-max will-change-transform" style={{ x }}>
+          {doubled.map((card, i) => (
+            <div
+              key={`${card.title}-${i}`}
+              className="shrink-0 w-[85vw] sm:w-[56vw] lg:w-[42vw] lg:max-w-[540px] h-[400px]"
+              aria-hidden={i >= cards.length ? true : undefined}
+            >
+              <TechnologyCard
+                title={card.title}
+                description={card.description}
+                icon={card.icon}
+                variant={i % 5}
+                path={card.path}
+                focusable={i < cards.length}
+                onActivate={handleActivate}
+                theme={themeVars(cardThemes[(i % cards.length) % cardThemes.length])}
+                glowDelay={((i % cards.length) % cardThemes.length) * 0.7}
+              />
+            </div>
+          ))}
+        </motion.div>
+      </div>
+
+      {/* Manual navigation arrows — glassmorphism, kept outside the drag region so
+          clicks never start a drag. Auto-scroll continues after each click. */}
+      <button
+        type="button"
+        aria-label="Previous technologies"
+        onClick={() => scrollByCards(-1)}
+        className="its-nav-btn absolute left-2 sm:left-3 lg:-left-6 top-1/2 -translate-y-1/2 z-30
+                   flex items-center justify-center rounded-full cursor-pointer
+                   w-11 h-11 sm:w-12 sm:h-12 lg:w-14 lg:h-14
+                   border border-[rgba(255,255,255,0.65)] text-[#0284C7]
+                   transition-transform duration-300 ease-out hover:scale-110 hover:text-[#0369A1]
+                   focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0284C7] focus-visible:ring-offset-2"
+        style={{
+          background: 'linear-gradient(160deg, rgba(255,255,255,0.78), rgba(224,244,255,0.55))',
+          backdropFilter: 'blur(12px)',
+          WebkitBackdropFilter: 'blur(12px)',
+        }}
+      >
+        <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6" strokeWidth={2.5} />
+      </button>
+      <button
+        type="button"
+        aria-label="Next technologies"
+        onClick={() => scrollByCards(1)}
+        className="its-nav-btn absolute right-2 sm:right-3 lg:-right-6 top-1/2 -translate-y-1/2 z-30
+                   flex items-center justify-center rounded-full cursor-pointer
+                   w-11 h-11 sm:w-12 sm:h-12 lg:w-14 lg:h-14
+                   border border-[rgba(255,255,255,0.65)] text-[#0284C7]
+                   transition-transform duration-300 ease-out hover:scale-110 hover:text-[#0369A1]
+                   focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0284C7] focus-visible:ring-offset-2"
+        style={{
+          background: 'linear-gradient(160deg, rgba(255,255,255,0.78), rgba(224,244,255,0.55))',
+          backdropFilter: 'blur(12px)',
+          WebkitBackdropFilter: 'blur(12px)',
+        }}
+      >
+        <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6" strokeWidth={2.5} />
+      </button>
     </div>
   );
 };
@@ -326,9 +429,9 @@ const IntroServices = () => {
             from var(--its-angle),
             rgba(0,229,255,0) 0deg,
             rgba(0,229,255,0) 235deg,
-            #00E5FF 280deg,
-            #009DFF 315deg,
-            #00E5FF 350deg,
+            var(--its-line-a, #00E5FF) 280deg,
+            var(--its-line-b, #009DFF) 315deg,
+            var(--its-line-a, #00E5FF) 350deg,
             rgba(0,229,255,0) 360deg
           );
           -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
@@ -336,15 +439,48 @@ const IntroServices = () => {
           mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
           mask-composite: exclude;
           animation: its-border-spin 5s linear infinite;
-          filter: drop-shadow(0 0 3px rgba(0,200,255,0.5));
+          filter: drop-shadow(0 0 3px var(--its-line-glow, rgba(0,200,255,0.5)));
           transition: filter 350ms ease;
         }
         .group:hover .its-border-line {
-          filter: drop-shadow(0 0 8px rgba(0,215,255,0.95));
+          filter: drop-shadow(0 0 8px var(--its-line-glow-hover, rgba(0,215,255,0.95)));
+        }
+
+        /* Per-card glass surface — border + glow driven by the card's theme vars */
+        .its-card {
+          border-color: var(--its-border, rgba(186,232,255,0.55));
+          box-shadow: var(--its-shadow, 0 15px 40px rgba(0,140,255,0.16));
+        }
+        .group:hover .its-card {
+          border-color: var(--its-border-hover, rgba(120,224,255,0.85));
+          box-shadow: var(--its-shadow-hover, 0 28px 70px rgba(0,160,255,0.4));
+        }
+
+        /* Gentle breathing outer glow, tinted per card */
+        @keyframes its-breathe-pulse {
+          0%, 100% { opacity: 0.2; }
+          50% { opacity: 0.5; }
+        }
+        .its-breathe {
+          box-shadow: 0 0 34px 4px var(--its-line-glow, rgba(0,200,255,0.4));
+          opacity: 0.28;
+          animation: its-breathe-pulse 4.5s ease-in-out infinite;
+        }
+        .group:hover .its-breathe {
+          box-shadow: 0 0 46px 7px var(--its-line-glow-hover, rgba(0,215,255,0.6));
+        }
+
+        /* Glassmorphism nav arrows — soft blue glow, stronger on hover */
+        .its-nav-btn {
+          box-shadow: 0 8px 24px rgba(0,150,255,0.22), 0 0 0 1px rgba(255,255,255,0.35) inset;
+          transition: box-shadow 300ms ease, transform 300ms ease, color 300ms ease;
+        }
+        .its-nav-btn:hover {
+          box-shadow: 0 12px 34px rgba(0,170,255,0.45), 0 0 20px rgba(0,195,255,0.5), 0 0 0 1px rgba(255,255,255,0.5) inset;
         }
 
         @media (prefers-reduced-motion: reduce) {
-          .its-glow-a, .its-glow-b, .its-particle, .its-border-line {
+          .its-glow-a, .its-glow-b, .its-particle, .its-border-line, .its-breathe {
             animation: none !important;
           }
         }

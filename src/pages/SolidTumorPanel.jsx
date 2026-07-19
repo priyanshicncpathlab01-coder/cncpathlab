@@ -1,21 +1,15 @@
 import { useEffect, useRef } from 'react';
-import { motion, useMotionValue, useSpring, useTransform, useMotionTemplate, useScroll } from 'framer-motion';
+import { motion, useTransform, useScroll } from 'framer-motion';
 import {
     Dna,
     Microscope,
     Cpu,
     Layers,
-    Binary,
-    GitCompare,
-    Copy,
-    Combine,
     Target,
     Crosshair,
     ShieldCheck,
     ShieldPlus,
     Gauge,
-    Boxes,
-    FileText,
     FileCheck,
     ClipboardCheck,
     ClipboardList,
@@ -53,18 +47,72 @@ const overviewHighlights = [
     'Deliver pathologist-reviewed, clinically actionable genomic reports.',
 ];
 
-const capabilities = [
-    { icon: Binary, title: 'Single Nucleotide Variants (SNVs)', description: 'Accurate detection of point mutations across cancer-associated genes, including well-characterized driver and resistance variants.' },
-    { icon: GitCompare, title: 'Insertions & Deletions (Indels)', description: 'Sensitive calling of small insertions and deletions that shift reading frames or alter protein function in solid tumors.' },
-    { icon: Copy, title: 'Copy Number Variations (CNVs)', description: 'Quantitative assessment of gene amplifications and deletions that drive tumor growth and influence therapy selection.' },
-    { icon: Combine, title: 'Gene Fusions & Rearrangements', description: 'Identification of oncogenic fusions and structural rearrangements that define targetable molecular subtypes.' },
-    { icon: Target, title: 'Clinically Actionable Biomarkers', description: 'Reporting of biomarkers tied to approved targeted therapies, immunotherapy eligibility, and prognosis.' },
-    { icon: Dna, title: 'Cancer-Associated Gene Profiling', description: 'Comprehensive interrogation of a curated panel spanning oncogenes, tumor suppressors, and pathway regulators.' },
-    { icon: Layers, title: 'High-Depth Sequencing', description: 'Deep, uniform coverage that resolves low-allele-frequency variants from heterogeneous tumor specimens.' },
-    { icon: Boxes, title: 'FFPE Tissue Compatibility', description: 'Optimized chemistry for formalin-fixed, paraffin-embedded tissue as well as fresh and frozen samples.' },
-    { icon: Gauge, title: 'DNA Quality Assessment', description: 'Rigorous pre-sequencing quantification and integrity checks that safeguard result reliability.' },
-    { icon: Cpu, title: 'Bioinformatics Analysis', description: 'A validated pipeline for alignment, variant calling, annotation, and quality-controlled data processing.' },
-    { icon: FileText, title: 'Clinical Interpretation & Reporting', description: 'Expert curation of variants into concise, guideline-aligned reports with therapeutic and clinical context.' },
+// Cancer panel kits shown in the Capabilities section (name + rich description).
+const solidTumorPanels = [
+    {
+        name: 'CDCap™ Comprehensive Cancer Panel Kit',
+        description: (
+            <>
+                Hybridization capture-based NGS assay designed to detect <strong>SNVs, indels, CNVs, and gene fusions</strong> across <strong>641 cancer-associated genes</strong>. Integrates important biomarkers including <strong>TMB, MSI, and MMR</strong> for immunotherapy response prediction and treatment insights. Optimized with <strong>UMI technology</strong> for enhanced sensitivity in liquid biopsy applications.
+            </>
+        ),
+    },
+    {
+        name: 'CDCap™ Solid Tumor Mid Panel Kit',
+        description: (
+            <>
+                Uses advanced hybrid capture technology to profile <strong>122 cancer-related genes</strong> and detect <strong>SNVs, indels, gene fusions, MSI (19 loci), and 219 chemotherapy-associated markers</strong> across multiple tumor types.
+            </>
+        ),
+    },
+    {
+        name: 'CDCap™ Solid Tumor HotSpot Panel Kit',
+        description: (
+            <>
+                A hybrid capture-based NGS panel designed to analyze hotspot mutations across <strong>49 cancer genes</strong>, enabling detection of <strong>SNVs, indels, CNVs, and gene fusions</strong> for comprehensive solid tumor genomic analysis.
+            </>
+        ),
+    },
+    {
+        name: 'CDCap™ Solid Tumor Fusion RNA Panel Kit',
+        description: (
+            <>
+                Utilizes targeted RNA sequencing technology to analyze <strong>105 genes</strong> for gene fusions, mutations, and expression profiles, enabling sensitive fusion detection in solid tumor research applications.
+            </>
+        ),
+    },
+    {
+        name: 'CDCap™ Lung Cancer Panel Kit',
+        description: (
+            <>
+                A hybrid capture NGS assay designed to detect <strong>SNVs, indels, CNVs, and gene fusions</strong> across <strong>23 NSCLC driver genes</strong> including full exon regions and key fusion regions, supporting comprehensive lung cancer genomic profiling.
+            </>
+        ),
+    },
+    {
+        name: 'CDAmp™ Colorectal/Gastric Cancer Panel',
+        description: (
+            <>
+                A multiplex PCR-based NGS panel designed to analyze <strong>35 NCCN-recommended genes</strong> and detect key driver mutations including <strong>SNVs and indels</strong> with sensitivity down to <strong>1% VAF</strong> for molecular classification and precision oncology research in colorectal cancer, gastric cancer, and GIST studies.
+            </>
+        ),
+    },
+    {
+        name: 'CDAmp™ Glioma Panel Kit',
+        description: (
+            <>
+                A PCR-based targeted sequencing panel designed to detect important glioma-associated alterations including <strong>IDH1/2 mutations, TERT promoter hotspots, BRAF hotspots, and large CNV deletions involving 1p/19q/10q regions</strong>. Supports low-input samples and rapid molecular profiling workflows.
+            </>
+        ),
+    },
+    {
+        name: 'CDCap™ HotSpot Panel',
+        description: (
+            <>
+                A targeted cancer panel designed to detect <strong>SNVs, indels, CNVs, and gene fusions</strong> across <strong>49 key cancer genes</strong>. Suitable for genomic analysis of <strong>FFPE tissue and plasma samples</strong>.
+            </>
+        ),
+    },
 ];
 
 const workflowSteps = [
@@ -112,104 +160,6 @@ const whyChooseUs = [
 // ---------------------------------------------------------------------------
 // Cards
 // ---------------------------------------------------------------------------
-
-// Faint biotech decoration rendered inside each capability card.
-const CardDecoration = () => (
-    <svg
-        aria-hidden="true"
-        className="stp-cap-drift pointer-events-none absolute -bottom-6 -right-4 w-40 h-40 text-teal-300/50"
-        viewBox="0 0 160 160"
-        fill="none"
-    >
-        <path d="M50 8 C90 40 30 72 70 104 C90 120 60 140 60 152" stroke="currentColor" strokeWidth="1.2" opacity="0.7" />
-        <path d="M78 8 C38 40 98 72 58 104 C38 120 68 140 68 152" stroke="currentColor" strokeWidth="1.2" opacity="0.7" />
-        {[20, 44, 68, 92, 116].map((y, i) => (
-            <line key={i} x1="52" y1={y} x2="76" y2={y} stroke="currentColor" strokeWidth="1" opacity="0.5" />
-        ))}
-        <line x1="118" y1="40" x2="140" y2="70" stroke="currentColor" strokeWidth="1" opacity="0.5" />
-        <line x1="140" y1="70" x2="120" y2="100" stroke="currentColor" strokeWidth="1" opacity="0.5" />
-        <circle cx="118" cy="40" r="3" fill="currentColor" opacity="0.8" />
-        <circle cx="140" cy="70" r="2.4" fill="currentColor" opacity="0.8" />
-        <circle cx="120" cy="100" r="3.2" fill="currentColor" opacity="0.8" />
-    </svg>
-);
-
-// Premium, cursor-reactive glassmorphism card used in the Capabilities section.
-const CapabilityGlassCard = ({ icon: Icon, title, description, index }) => {
-    const ref = useRef(null);
-    const mx = useMotionValue(0.5);
-    const my = useMotionValue(0.5);
-
-    const rotateX = useSpring(useTransform(my, [0, 1], [7, -7]), { stiffness: 150, damping: 18 });
-    const rotateY = useSpring(useTransform(mx, [0, 1], [-7, 7]), { stiffness: 150, damping: 18 });
-
-    const glareX = useTransform(mx, (v) => `${v * 100}%`);
-    const glareY = useTransform(my, (v) => `${v * 100}%`);
-    const glare = useMotionTemplate`radial-gradient(520px circle at ${glareX} ${glareY}, rgba(45,212,191,0.22), transparent 55%)`;
-
-    const handleMove = (e) => {
-        const rect = ref.current?.getBoundingClientRect();
-        if (!rect) return;
-        mx.set((e.clientX - rect.left) / rect.width);
-        my.set((e.clientY - rect.top) / rect.height);
-    };
-    const handleLeave = () => {
-        mx.set(0.5);
-        my.set(0.5);
-    };
-
-    return (
-        <motion.div
-            initial={{ opacity: 0, y: 44, filter: 'blur(12px)' }}
-            whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-            viewport={{ once: true, margin: '-60px' }}
-            transition={{ delay: (index % 3) * 0.12, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-            className="group relative h-full [perspective:1400px]"
-        >
-            {/* breathing sea-green halo */}
-            <div className="stp-cap-breathe pointer-events-none absolute -inset-3 rounded-[32px] bg-[radial-gradient(circle_at_50%_40%,rgba(20,184,166,0.35),rgba(6,182,212,0.15)_55%,transparent_75%)] blur-2xl" />
-
-            <motion.div
-                ref={ref}
-                onMouseMove={handleMove}
-                onMouseLeave={handleLeave}
-                style={{ rotateX, rotateY, transformStyle: 'preserve-3d' }}
-                whileHover={{ y: -11, scale: 1.03, transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] } }}
-                className="relative h-full"
-            >
-                {/* animated shimmering gradient border */}
-                <div className="stp-cap-border pointer-events-none absolute -inset-px rounded-[27px] opacity-70 group-hover:opacity-100 transition-opacity duration-400" />
-
-                {/* glass body */}
-                <div className="relative h-full overflow-hidden rounded-[26px] border border-white/10 bg-white/[0.08] backdrop-blur-xl backdrop-saturate-150 p-8 shadow-[0_18px_50px_-12px_rgba(13,148,136,0.35),inset_0_1px_0_rgba(255,255,255,0.12)] transition-colors duration-400 group-hover:bg-white/[0.05]">
-                    {/* top-edge reflection */}
-                    <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/50 to-transparent" />
-                    {/* soft inner + cyan radial highlight */}
-                    <div className="pointer-events-none absolute inset-0 rounded-[26px] bg-[radial-gradient(120%_80%_at_15%_0%,rgba(45,212,191,0.16),transparent_45%)]" />
-                    {/* cursor-following light */}
-                    <motion.div style={{ background: glare }} className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-                    {/* periodic shine sweep */}
-                    <div className="stp-cap-shine pointer-events-none absolute inset-0" />
-                    {/* faint biotech decoration */}
-                    <CardDecoration />
-
-                    {/* content lifted forward in 3D */}
-                    <div className="relative" style={{ transform: 'translateZ(45px)' }}>
-                        <div className="relative mb-6 inline-flex">
-                            {/* rotating glow behind badge */}
-                            <span className="stp-cap-spin-slow pointer-events-none absolute -inset-1.5 rounded-2xl bg-[conic-gradient(from_0deg,rgba(45,212,191,0.7),rgba(34,211,238,0.1),rgba(52,211,153,0.7),rgba(34,211,238,0.1),rgba(45,212,191,0.7))] blur-[6px] opacity-70 group-hover:opacity-100 transition-opacity duration-400" />
-                            <span className="stp-cap-float relative flex h-14 w-14 items-center justify-center rounded-2xl border border-teal-300/30 bg-white/10 text-teal-200 shadow-[inset_0_1px_0_rgba(255,255,255,0.15)] backdrop-blur-sm">
-                                <Icon className="h-7 w-7" />
-                            </span>
-                        </div>
-                        <h3 className="text-xl font-extrabold tracking-tight text-white mb-3">{title}</h3>
-                        <p className="text-[15px] font-medium leading-relaxed text-slate-300">{description}</p>
-                    </div>
-                </div>
-            </motion.div>
-        </motion.div>
-    );
-};
 
 // Premium interactive card for Clinical Applications (dark section).
 const ApplicationCard = ({ title, description, icon: Icon, delay }) => (
@@ -503,10 +453,38 @@ const SolidTumorPanel = () => {
                         subtitle="Every clinically relevant class of genomic alteration — detected, quantified, and interpreted within a single high-depth NGS workflow."
                         className="[&_h2]:text-white [&_h2]:drop-shadow-[0_0_24px_rgba(45,212,191,0.25)] [&_p]:text-slate-300"
                     />
-                    <div className="mx-auto mt-16 grid max-w-7xl grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
-                        {capabilities.map((card, idx) => (
-                            <CapabilityGlassCard key={idx} {...card} index={idx} />
-                        ))}
+                    <div className="mx-auto mt-16 max-w-6xl">
+                        {/* Column headers (desktop/tablet only — rows stack on mobile) */}
+                        <div className="hidden md:grid md:grid-cols-[minmax(0,1fr)_minmax(0,1.9fr)] gap-8 px-7 pb-4">
+                            <span className="text-xs font-bold uppercase tracking-widest text-teal-300">Panel Name</span>
+                            <span className="text-xs font-bold uppercase tracking-widest text-teal-300">Description</span>
+                        </div>
+
+                        <div className="space-y-5">
+                            {solidTumorPanels.map((panel, idx) => (
+                                <motion.div
+                                    key={idx}
+                                    initial={{ opacity: 0, y: 24 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    viewport={{ once: true, margin: '-60px' }}
+                                    transition={{ duration: 0.55, delay: (idx % 4) * 0.06, ease: [0.22, 1, 0.36, 1] }}
+                                    className="group grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_minmax(0,1.9fr)] gap-3 md:gap-8 rounded-2xl border border-white/60 bg-gradient-to-br from-white/95 to-sky-50/90 p-6 md:p-7 shadow-[0_10px_36px_-14px_rgba(13,148,136,0.3)] backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:border-cyan-300/70 hover:shadow-[0_22px_50px_-16px_rgba(13,148,136,0.45),0_0_28px_-10px_rgba(34,211,238,0.5)]"
+                                >
+                                    {/* Column 1: Panel name */}
+                                    <div className="md:border-r md:border-slate-200/80 md:pr-6">
+                                        <h3 className="flex items-start gap-2.5 text-[17px] font-extrabold leading-snug tracking-tight text-[#0F172A]">
+                                            <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-gradient-to-br from-primary-500 to-teal-500 shadow-[0_0_8px_rgba(34,211,238,0.6)]" />
+                                            {panel.name}
+                                        </h3>
+                                    </div>
+
+                                    {/* Column 2: Description */}
+                                    <p className="text-[15px] leading-[1.75] text-[#334155] [&_strong]:font-semibold [&_strong]:text-[#0F172A]">
+                                        {panel.description}
+                                    </p>
+                                </motion.div>
+                            ))}
+                        </div>
                     </div>
                 </div>
             </section>

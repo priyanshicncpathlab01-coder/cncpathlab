@@ -75,10 +75,10 @@ const Navbar = () => {
 
   return (
     <nav
-      className={`fixed top-2 sm:top-3 lg:top-4 inset-x-2 sm:inset-x-4 lg:inset-x-6 z-50 py-3 border transition-all duration-[350ms] [transition-timing-function:ease] ${
+      className={`fixed top-2 sm:top-3 lg:top-4 inset-x-2 sm:inset-x-4 lg:inset-x-6 z-50 py-3 border transition-all duration-500 ease-out ${
         isScrolled
-          ? 'bg-white/90 backdrop-blur-xl border-white/35 rounded-3xl shadow-[0_10px_35px_rgba(15,23,42,0.08)]'
-          : 'bg-transparent backdrop-blur-[0px] border-transparent rounded-none shadow-none'
+          ? 'bg-white/85 backdrop-blur-3xl border-white/60 rounded-3xl shadow-[0_12px_45px_rgba(15,23,42,0.08)]'
+          : 'bg-transparent backdrop-blur-none border-transparent rounded-none shadow-none'
       }`}
     >
       <div className="container-custom flex items-center justify-between">
