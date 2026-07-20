@@ -19,7 +19,7 @@ const description =
 export const metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: 'CNC Path Lab | Advanced Specialty Laboratory Services',
+    default: 'CNC Path Lab',
     template: '%s | CNC Path Lab',
   },
   description,
@@ -43,14 +43,14 @@ export const metadata = {
   openGraph: {
     type: 'website',
     siteName: 'CNC Path Lab',
-    title: 'CNC Path Lab | Advanced Specialty Laboratory Services',
+    title: 'CNC Path Lab',
     description,
     url: siteUrl,
     images: [{ url: '/assets/mainpic.webp', width: 1200, height: 630, alt: 'CNC Path Lab' }],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'CNC Path Lab | Advanced Specialty Laboratory Services',
+    title: 'CNC Path Lab',
     description,
     images: ['/assets/mainpic.webp'],
   },
