@@ -1,8 +1,9 @@
+'use client';
+
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Truck, Globe2, Clock, ShieldCheck, ArrowRight } from 'lucide-react';
-import logisticsImg from '../assets/apostream.webp';
-
+const logisticsImg = '/assets/apostream.webp';
 const features = [
   {
     title: 'Global Kit Management',

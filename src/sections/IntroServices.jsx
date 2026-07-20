@@ -1,5 +1,7 @@
+'use client';
+
 import { useRef, useEffect, useLayoutEffect, useState, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from '@/lib/navigation';
 import { motion, useMotionValue, useTransform, useAnimationFrame, wrap, animate } from 'framer-motion';
 import { Layers, Microscope, Dna, Search, Activity, TestTube, ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 

@@ -1,3 +1,5 @@
+'use client';
+
 import { useEffect, useRef, useState, Fragment } from 'react';
 import {
     motion,

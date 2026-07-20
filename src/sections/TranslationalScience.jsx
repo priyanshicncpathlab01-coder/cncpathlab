@@ -1,9 +1,10 @@
+'use client';
+
 import React from 'react';
 import { motion } from 'framer-motion';
 import { FileDown, ArrowRight, BookOpen, CheckCircle2 } from 'lucide-react';
 import Button from '../components/ui/Button';
-import translationalImg from '../assets/apoadvantageone.webp';
-
+const translationalImg = '/assets/apoadvantageone.webp';
 const capabilities = [
   'Assay Development & Validation',
   'Method Transfer & Global Harmonization',

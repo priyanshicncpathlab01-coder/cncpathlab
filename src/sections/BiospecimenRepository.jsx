@@ -1,9 +1,10 @@
+'use client';
+
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Droplet, Box, Activity, HeartPulse, Search, Users, ArrowRight } from 'lucide-react';
 import Button from '../components/ui/Button';
-import bioImg from '../assets/bioimage.webp';
-
+const bioImg = '/assets/bioimage.webp';
 const stats = [
   { value: '500K+', label: 'Blood & Fluid Samples Testing' },
   { value: '200K+', label: 'Tissue Blocks Testing' },

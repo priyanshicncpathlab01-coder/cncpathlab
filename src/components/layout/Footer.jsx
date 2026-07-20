@@ -1,9 +1,11 @@
+'use client';
+
 import React from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import Link from 'next/link';
+import { useNavigate, useLocation } from '@/lib/navigation';
 import { Beaker, Mail, Phone, MapPin } from 'lucide-react';
 import { FaFacebook, FaXTwitter, FaLinkedin } from 'react-icons/fa6';
-import labLogo from '../../assets/logo.png';
-
+const labLogo = '/assets/logo.png';
 const Footer = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -65,7 +67,7 @@ const Footer = () => {
           <div>
             <h4 className="text-white font-bold mb-6">Quick Links</h4>
             <ul className="space-y-4">
-              <li><a href="#" onClick={(e) => handleNavigate(e, '/')} className="hover:text-primary-400 transition-colors">Home</a></li>
+              <li><Link href="/" className="hover:text-primary-400 transition-colors">Home</Link></li>
               <li><a href="#services" onClick={(e) => handleNavigate(e, null, '#services')} className="hover:text-primary-400 transition-colors">Services</a></li>
               <li><a href="#solutions" onClick={(e) => handleNavigate(e, null, '#solutions')} className="hover:text-primary-400 transition-colors">Solutions</a></li>
               <li><a href="#research" onClick={(e) => handleNavigate(e, null, '#research')} className="hover:text-primary-400 transition-colors">Research</a></li>

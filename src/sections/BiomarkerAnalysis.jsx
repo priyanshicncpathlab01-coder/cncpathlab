@@ -1,15 +1,16 @@
+'use client';
+
 import React from 'react';
 import { motion } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from '@/lib/navigation';
 import { Dna, Waves, Layers, Image as ImageIcon, BarChart, CheckCircle2, ArrowRight } from 'lucide-react';
 import SectionHeader from '../components/ui/SectionHeader';
-import immuneImg from '../assets/immune.webp';
-import bioanalysisImg from '../assets/bioanalysis.webp';
-import genomicsImg from '../assets/genomics.webp';
-import tissueImg from '../assets/tissue.webp';
-import cytokineImg from '../assets/cytokine.webp';
-import biomarker from '../assets/apoadvantagetwo.webp';
-
+const immuneImg = '/assets/immune.webp';
+const bioanalysisImg = '/assets/bioanalysis.webp';
+const genomicsImg = '/assets/genomics.webp';
+const tissueImg = '/assets/tissue.webp';
+const cytokineImg = '/assets/cytokine.webp';
+const biomarker = '/assets/apoadvantagetwo.webp';
 const analyses = [
   { title: 'Immune Monitoring & Flow Cytometry', icon: Layers, image: immuneImg,path:'/immune-monitoring'},
   { title: 'Bioanalysis', icon: BarChart, image: bioanalysisImg,path:'/bioanalytical-testing'},

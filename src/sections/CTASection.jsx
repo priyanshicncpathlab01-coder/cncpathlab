@@ -1,9 +1,10 @@
+'use client';
+
 import React from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import Button from '../components/ui/Button';
-import ctaBg from '../assets/images/earlyphase.webp';
-
+const ctaBg = '/assets/images/earlyphase.webp';
 const CTASection = () => {
   return (
     <section id="contact" className="relative py-28 md:py-36 overflow-hidden">

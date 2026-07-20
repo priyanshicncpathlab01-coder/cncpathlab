@@ -1,10 +1,11 @@
+'use client';
+
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence, useScroll, useTransform, useSpring, useMotionValue, useReducedMotion } from 'framer-motion';
 import { Phone, Mail, MapPin } from 'lucide-react';
 import Button from '../components/ui/Button';
-import bgVideo from '../assets/biovideo.mp4';
-import videoPoster from '../assets/labimage.webp';
-
+const bgVideo = '/assets/biovideo.mp4';
+const videoPoster = '/assets/labimage.webp';
 const slides = [
   {
     title: "CNC Path Lab",

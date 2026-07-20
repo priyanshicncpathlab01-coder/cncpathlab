@@ -1,3 +1,5 @@
+'use client';
+
 import { useRef } from 'react';
 import { motion, useMotionValue, useSpring, useTransform, useMotionTemplate } from 'framer-motion';
 import { Dna, TestTube2, Atom, Aperture, Microscope, ArrowRight, FlaskConical, Sparkles } from 'lucide-react';

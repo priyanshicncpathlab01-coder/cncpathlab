@@ -1,0 +1,25 @@
+// Single source of truth for the site's internal routes.
+// Used by the client-side route prefetcher and the sitemap.
+export const ROUTES = [
+  '/',
+  '/lab-services',
+  '/preclinical',
+  '/early-phase',
+  '/apostream',
+  '/immune-monitoring',
+  '/bioanalytical-testing',
+  '/whole-genome-sequencing',
+  '/whole-exome-sequencing',
+  '/whole-plasmid-sequencing',
+  '/visium-hd',
+  '/solid-tumor-panel',
+  '/cytokine-profiling',
+  '/tissue-imaging-analysis',
+  '/about',
+  '/target-biomarker-validation',
+  '/multiplex-immunofluorescence',
+  '/immunohistochemistry',
+  '/rt-pcr',
+  '/fish-ish',
+  '/pathology-services',
+];
